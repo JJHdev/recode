@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: recode
+
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521:xe
+    username: JJH
+    password: 1234
+    driver-class-name: oracle.jdbc.OracleDriver
+    hikari:
+      maximum-pool-size: 10  # \uCD5C\uB300 \uCEE4\uB125\uC158 \uC218
+      minimum-idle: 5        # \uCD5C\uC18C \uB300\uAE30 \uCEE4\uB125\uC158 \uC218
+      idle-timeout: 30000    # \uCEE4\uB125\uC158\uC774 \uB300\uAE30\uD560 \uC218 \uC788\uB294 \uCD5C\uB300 \uC2DC\uAC04
+      max-lifetime: 1800000  # \uCEE4\uB125\uC158\uC758 \uCD5C\uB300 \uC218\uBA85
+      connection-timeout: 20000  # \uCEE4\uB125\uC158\uC744 \uAC00\uC838\uC624\uAE30 \uC704\uD55C \uB300\uAE30 \uC2DC\uAC04
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    generate-ddl: false
+    show-sql: true
+    database: oracle
+    database-platform: org.hibernate.dialect.OracleDialect
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE  # \uD30C\uB77C\uBBF8\uD130 \uBC14\uC778\uB529 \uC815\uBCF4
+
