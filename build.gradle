@@ -7,6 +7,10 @@ plugins {
 group = 'company.space'
 version = '0.0.1-SNAPSHOT'
 
+jar {
+	archiveBaseName = 'recode' // JAR 파일 이름
+}
+
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(17)
