@@ -13,7 +13,7 @@ public class HelloService {
         this.helloRepository = helloRepository;
     }
 
-    public void sayHello(Email email) {
-        helloRepository.save(email);
+    public void sayHello(User user) {
+        helloRepository.save(user);
     }
 }

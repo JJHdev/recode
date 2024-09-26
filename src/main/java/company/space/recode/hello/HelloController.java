@@ -16,10 +16,14 @@ public class HelloController {
 
     @GetMapping("/")
     public String hello() {
-        Email email = new Email();
-        email.setEmail("goodjob321@hanmail.net");
-        email.setEmailStatus(true);
-        helloService.sayHello(email);
+        User user = new User();
+        user.setUserId("admin");
+        user.setUserName("이름입력");
+        user.setPassword("123456");
+        user.setGender("M");
+        user.setEmail("goodjob321@hanmail.net");
+        user.setStatus("ACTIVE");
+        helloService.sayHello(user);
         return "hello";
     }
 }
