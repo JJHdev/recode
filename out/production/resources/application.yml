@@ -26,4 +26,3 @@ logging:
   level:
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE  # \uD30C\uB77C\uBBF8\uD130 \uBC14\uC778\uB529 \uC815\uBCF4
-

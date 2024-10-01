@@ -1,0 +1,17 @@
+# /groot/docker-compose.yml
+
+version: "3.1"
+services:
+  jenkins:
+    container_name: jenkins
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    user: root
+    ports:
+      - 8888:8080
+      - 50000:50000
+    volumes:
+      - /home/groot/jenkins:/var/jenkins_home
+      - /home/groot/.ssh:/root/.ssh
