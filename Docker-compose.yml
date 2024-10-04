@@ -1,38 +1,35 @@
-version: '3'
+version: '3.8'
 
 services:
-  app:
-    image: abysss/docker-master
-    ports:
-      - "8081:8081"
+  oracle-db:
+    image: gvenzl/oracle-xe:21-slim  # Oracle 21c XE 버전
+    container_name: oracle-db
     environment:
-      SPRING_PROFILES_ACTIVE: prod
-    depends_on:
-      - db
-    networks:
-      - app-network
-
-
-  db:
-    image: oracle/database:21.3.0-ee  # Oracle Database 21c 이미지 사용
-    environment:
-      ORACLE_PWD: 1234      # Oracle 비밀번호
-      ORACLE_SID: xe              # SID 설정
-      ORACLE_PDB: XEPDB1              # PDB 설정 (Optional)
+      - ORACLE_PASSWORD=1234  # Oracle 사용자 비밀번호 설정
     ports:
-      - "1521:1521"  # Oracle의 기본 포트는 1521
+      - "1521:1521"  # 호스트와 컨테이너 간의 포트 연결
     volumes:
-      - db-data:/opt/oracle/oradata  # Oracle 데이터 저장 볼륨 경로
+      - oracle-data:/opt/oracle/oradata  # 데이터를 유지하기 위한 볼륨 설정
     networks:
-      - app-network
-    healthcheck:
-      test: ["CMD-SHELL", "echo 'SELECT 1 FROM DUAL;' | sqlplus system/1234@localhost:1521/XEPDB1 as sysdba"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
+      - my-network
+
+  spring-app:
+    image: abysss/recode-master  # 이미 빌드된 Spring Boot JAR 파일이 있는 이미지
+    container_name: spring-app
+    depends_on:
+      - oracle-db  # spring-app이 oracle-db에 의존함
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:oracle:thin:@oracle-db:1521/xe  # Oracle DB의 연결 URL (docker-compose 네트워크 사용)
+      SPRING_DATASOURCE_USERNAME: recodeDB
+      SPRING_DATASOURCE_PASSWORD: 1234
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: oracle.jdbc.OracleDriver
+    ports:
+      - "8080:8080"  # 애플리케이션 포트
+    networks:
+      - my-network
 
 volumes:
-  db-data:
+  oracle-data:
 
 networks:
-  app-network:
+  my-network:
