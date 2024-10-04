@@ -56,16 +56,16 @@ jobs:
         if: contains(github.ref, 'master')
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/docker-master -f ./Dockerfile .
-          docker push ${{ secrets.DOCKER_USERNAME }}/docker-master
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/recode-master -f ./Dockerfile .
+          docker push ${{ secrets.DOCKER_USERNAME }}/recode-master
 
       # docker build & push to develop
       - name: Docker build & push to prod
         if: contains(github.ref, 'prod')
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/docker-prod -f ./Dockerfile .
-          docker push ${{ secrets.DOCKER_USERNAME }}/docker-prod
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/recode-prod -f ./Dockerfile .
+          docker push ${{ secrets.DOCKER_USERNAME }}/recode-prod
           
           ## deploy to production
           #- name: Deploy to prod
