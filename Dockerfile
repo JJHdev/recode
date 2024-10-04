@@ -2,7 +2,7 @@
 FROM openjdk:17-alpine AS build
 WORKDIR /app
 # 현재 프로젝트 파일 복사
-COPY . .
+COPY . /app
 # gradlew 파일에 권한 부여
 RUN chmod +x ./gradlew
 # gradlew 파일을 Unix 형식으로 변환 (줄 바꿈 문제 해결)
