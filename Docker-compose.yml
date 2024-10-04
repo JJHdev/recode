@@ -7,7 +7,7 @@ services:
     environment:
       - ORACLE_PASSWORD=1234  # Oracle 사용자 비밀번호 설정
     ports:
-      - "1521:1521"  # 호스트와 컨테이너 간의 포트 연결
+      - "1522:1521"  # 호스트와 컨테이너 간의 포트 연결
     volumes:
       - oracle-data:/opt/oracle/oradata  # 데이터를 유지하기 위한 볼륨 설정
     networks:
