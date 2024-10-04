@@ -66,6 +66,10 @@ jobs:
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -t ${{ secrets.DOCKER_USERNAME }}/docker-prod -f ./Dockerfile .
           docker push ${{ secrets.DOCKER_USERNAME }}/docker-prod
+
+      - name: Run Docker container
+        run: |
+          docker run -d -p 8080:8081 ${{ secrets.DOCKER_USERNAME }}/docker-app
           
           ## deploy to production
           #- name: Deploy to prod
