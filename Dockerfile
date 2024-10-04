@@ -15,6 +15,4 @@ EXPOSE 8081
 FROM openjdk:17-alpine
 WORKDIR /app
 COPY --from=build /app/build/libs/recode.jar .
-ENV SPRING_PROFILES_ACTIVE=prod
-ENV SERVER_PORT=8081
 CMD ["java", "-jar", "recode.jar"]
