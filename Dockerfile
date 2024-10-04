@@ -14,6 +14,7 @@ RUN ./gradlew build
 FROM openjdk:17-alpine
 WORKDIR /app
 COPY --from=build /app/build/libs/recode.jar .
+EXPOSE 8081
 ENV SPRING_PROFILES_ACTIVE=prod
 ENV SERVER_PORT=8081
 CMD ["java", "-jar", "build/libs/recode.jar"]
