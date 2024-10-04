@@ -69,7 +69,7 @@ jobs:
 
       - name: Run Docker container
         run: |
-          docker run -d -p 8080:8081 ${{ secrets.DOCKER_USERNAME }}/docker-app
+          docker run -d -p 8080:8081 ${{ secrets.DOCKER_USERNAME }}/docker-master
           
           ## deploy to production
           #- name: Deploy to prod
