@@ -12,6 +12,7 @@ services:
     networks:
       - app-network
 
+
   db:
     image: oracle/database:21.3.0-ee  # Oracle Database 21c 이미지 사용
     environment:
