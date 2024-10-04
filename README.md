@@ -23,3 +23,11 @@ myRecodeProject
         2. JVM메모리(-Xms512m -Xmx1024m)
         3. 리버스 프록시 : Nginx (80포트) -> 애플리케이션(8080포트)
 
+    3. 프로세스
+       1. 프로젝트를 수정한다.
+       2. git에 커밋 한다.
+       3. git에서 파일 업로드 후 gitauction에서 인식하고 CI를 수행한다
+       4. 각 환경에 따라 appliaction.yml을 만든다.
+       5. dockerfile 내용에 맞게 jar파일을 경량화 해서 dockerhub에 업로드 된다.
+       6. docker-compose up을 실행하여 jar이미지와 DB 이미지를 로컬로 pull 해서 컨테이너에 올린다.
+
