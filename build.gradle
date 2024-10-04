@@ -9,9 +9,6 @@ group = 'company.space'
 jar {
 	archiveBaseName = 'recode' // JAR 파일 이름
 }
-tasks.jar {
-	destinationDirectory = file("/app/build/libs")
-}
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(17)
