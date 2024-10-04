@@ -9,12 +9,12 @@ RUN chmod +x ./gradlew
 RUN sed -i 's/\r$//' ./gradlew
 RUN ./gradlew build
 # 컨테이너가 런타임 시에 사용할 포트 노출
+EXPOSE 8081
 
 # 2단계: 애플리케이션 실행 환경
 FROM openjdk:17-alpine
 WORKDIR /app
 COPY --from=build /app/build/libs/recode.jar .
-EXPOSE 8081
 ENV SPRING_PROFILES_ACTIVE=prod
 ENV SERVER_PORT=8081
-CMD ["java", "-jar", "build/libs/recode.jar"]
+CMD ["java", "-jar", "recode.jar"]
