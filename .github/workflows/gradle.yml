@@ -48,15 +48,8 @@ jobs:
           touch ./application-prod.yml
           echo "${{ secrets.YML_DEV }}" > ./application-prod.yml
 
-      # Configure Gradle for optimal use in GiHub Actions, including caching of downloaded dependencies.
-      # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
-
-      - name: Build with Gradle Wrapper
-        run: |
-          chmod +x ./gradlew  # 권한이없어 권한 추가.
-          ./gradlew clean build -x test
 
       # docker build & push to production
       - name: Docker build & push to master
