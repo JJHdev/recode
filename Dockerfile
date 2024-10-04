@@ -9,7 +9,7 @@ RUN chmod +x ./gradlew
 RUN sed -i 's/\r$//' ./gradlew
 RUN ./gradlew build
 # 컨테이너가 런타임 시에 사용할 포트 노출
-EXPOSE 8081
+EXPOSE 80
 
 # 2단계: 애플리케이션 실행 환경 / 멀티스테이징으로 1단계에서 만든 /app/build/libs/recode.jar 을 /app에 하나만 만들고 전부 이미지에 불포함 시킨다.
 FROM openjdk:17-alpine
