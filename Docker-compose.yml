@@ -1,17 +1,37 @@
-# /groot/docker-compose.yml
+version: '3'
 
-version: "3.1"
 services:
-  jenkins:
-    container_name: jenkins
-    build:
-      context: .
-      dockerfile: Dockerfile
-    restart: unless-stopped
-    user: root
+  app:
+    image: abysss/docker-master
     ports:
-      - 8888:8080
-      - 50000:50000
+      - "8081:8081"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  db:
+    image: oracle/database:21.3.0-ee  # Oracle Database 21c 이미지 사용
+    environment:
+      ORACLE_PWD: 1234      # Oracle 비밀번호
+      ORACLE_SID: xe              # SID 설정
+      ORACLE_PDB: XEPDB1              # PDB 설정 (Optional)
+    ports:
+      - "1521:1521"  # Oracle의 기본 포트는 1521
     volumes:
-      - /home/groot/jenkins:/var/jenkins_home
-      - /home/groot/.ssh:/root/.ssh
+      - db-data:/opt/oracle/oradata  # Oracle 데이터 저장 볼륨 경로
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "echo 'SELECT 1 FROM DUAL;' | sqlplus system/1234@localhost:1521/XEPDB1 as sysdba"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  db-data:
+
+networks:
+  app-network:
