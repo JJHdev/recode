@@ -5,13 +5,19 @@ services:
     image: gvenzl/oracle-xe:21-slim  # Oracle 21c XE 버전
     container_name: oracle-db
     environment:
-      - ORACLE_PASSWORD=1234  # Oracle 사용자 비밀번호 설정
+      - ORACLE_PASSWORD=1234  # Oracle 사용자 비밀번호 설
+      - ORACLE_USER="recodeDB"
     ports:
       - "1522:1521"  # 호스트와 컨테이너 간의 포트 연결
     volumes:
-      - oracle-data:/opt/oracle/oradata  # 데이터를 유지하기 위한 볼륨 설정
+      - oracle-docker-data:/opt/oracle/oradata  # 데이터를 유지하기 위한 볼륨 설정
+      - ./src/main/resources/sqlQuery/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - my-network
+    healthcheck:
+      test: [ "CMD-SHELL", "echo 'SELECT 1 FROM dual;' | sqlplus system/1234@localhost:1521/XE" ]
+      interval: 5s
+      retries: 3
 
   spring-app:
     image: abysss/recode-master  # 이미 빌드된 Spring Boot JAR 파일이 있는 이미지
@@ -29,7 +35,7 @@ services:
       - my-network
 
 volumes:
-  oracle-data:
+  oracle-docker-data:
 
 networks:
   my-network:
