@@ -10,7 +10,7 @@ create table users (
    CREATE_DATE DATE DEFAULT SYSDATE,
    UPDATE_DATE DATE,
    UPDATE_ID VARCHAR2(300)
-)
+);
 
 CREATE SEQUENCE user_key_seq
     START WITH 1
