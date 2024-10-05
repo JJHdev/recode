@@ -1,16 +1,16 @@
-create table users (
-                       USER_KEY Number primary KEY,
-                       USER_ID VARCHAR2(300) NOT NULL UNIQUE,
-                       USER_NAME VARCHAR2(50) NOT NULL,
-                       PASSWORD VARCHAR2(300) NOT NULL,
-                       GENDER CHAR(1) NOT NULL CHECK (GENDER IN ('M', 'F')),
-                       EMAIL VARCHAR2(200) UNIQUE,
-                       PROFILE_PICTURE_URL VARCHAR2(300),
-                       STATUS VARCHAR2(20) DEFAULT 'ACTIVE',
-                       CREATE_DATE DATE DEFAULT SYSDATE,
-                       UPDATE_DATE DATE,
-                       UPDATE_ID VARCHAR2(300)
-)
+CREATE TABLE users (
+   USER_KEY Number primary KEY,
+   USER_ID VARCHAR2(300) NOT NULL UNIQUE,
+   USER_NAME VARCHAR2(50) NOT NULL,
+   PASSWORD VARCHAR2(300) NOT NULL,
+   GENDER CHAR(1) NOT NULL CHECK (GENDER IN ('M', 'F')),
+   EMAIL VARCHAR2(200) UNIQUE,
+   PROFILE_PICTURE_URL VARCHAR2(300),
+   STATUS VARCHAR2(20) DEFAULT 'ACTIVE',
+   CREATE_DATE DATE DEFAULT SYSDATE,
+   UPDATE_DATE DATE,
+   UPDATE_ID VARCHAR2(300)
+);
 
 CREATE SEQUENCE user_key_seq
     START WITH 1
