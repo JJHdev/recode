@@ -4,6 +4,11 @@ services:
   oracle-db:
     image: gvenzl/oracle-xe:21-slim  # Oracle 21c XE 버전
     container_name: oracle-db
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
     environment:
       - ORACLE_PASSWORD=1234  # Oracle 사용자 비밀번호 설
       - ORACLE_USER="recodeDB"
@@ -14,8 +19,9 @@ services:
       - ./src/main/resources/sqlQuery/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - my-network
+    command: "bash -c 'if [ -f /opt/oracle/oradata/db_initialized ]; then /opt/oracle/scripts/setPassword.sh 1234; else touch /opt/oracle/oradata/db_initialized; fi'"
     healthcheck:
-      test: [ "CMD-SHELL", "echo 'SELECT 1 FROM dual;' | sqlplus system/1234@localhost:1521/XE" ]
+      test: ["CMD-SHELL", "echo 'exit' | sqlplus -L system/1234@localhost:1521/XE"]
       interval: 5s
       retries: 3
 
