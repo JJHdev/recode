@@ -11,11 +11,10 @@ services:
         max-file: "3"
     environment:
       - ORACLE_PASSWORD=1234  # Oracle 사용자 비밀번호 설
-      - ORACLE_USER="recodeDB"
     ports:
       - "1522:1521"  # 호스트와 컨테이너 간의 포트 연결
     volumes:
-      - oracle-docker-data:/opt/oracle/oradata  # 데이터를 유지하기 위한 볼륨 설정
+      - oracle_docker_data:/opt/oracle/oradata  # 데이터를 유지하기 위한 볼륨 설정
       - ./src/main/resources/sqlQuery/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - my-network
@@ -28,7 +27,8 @@ services:
     image: abysss/recode-master  # 이미 빌드된 Spring Boot JAR 파일이 있는 이미지
     container_name: spring-app
     depends_on:
-      - oracle-db  # spring-app이 oracle-db에 의존함
+      oracle-db:
+        condition: service_healthy  # DB가 health 상태일 때에만 Spring 앱 시작
     environment:
       SPRING_DATASOURCE_URL: jdbc:oracle:thin:@oracle-db:1521/xe
       SPRING_DATASOURCE_USERNAME: recodeDB
@@ -38,9 +38,8 @@ services:
       - "8080:8080"  # 애플리케이션 포트
     networks:
       - my-network
-
 volumes:
-  oracle-docker-data:
+  oracle_docker_data:
 
 networks:
   my-network:
