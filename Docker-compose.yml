@@ -19,7 +19,6 @@ services:
       - ./src/main/resources/sqlQuery/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - my-network
-    command: "bash -c 'if [ -f /opt/oracle/oradata/db_initialized ]; then /opt/oracle/scripts/setPassword.sh 1234; else touch /opt/oracle/oradata/db_initialized; fi'"
     healthcheck:
       test: ["CMD-SHELL", "echo 'exit' | sqlplus -L system/1234@localhost:1521/XE"]
       interval: 5s
@@ -31,7 +30,7 @@ services:
     depends_on:
       - oracle-db  # spring-app이 oracle-db에 의존함
     environment:
-      SPRING_DATASOURCE_URL: jdbc:oracle:thin:@oracle-db:1521/xe  # Oracle DB의 연결 URL (docker-compose 네트워크 사용)
+      SPRING_DATASOURCE_URL: jdbc:oracle:thin:@oracle-db:1521/xe
       SPRING_DATASOURCE_USERNAME: recodeDB
       SPRING_DATASOURCE_PASSWORD: 1234
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: oracle.jdbc.OracleDriver
