@@ -13,7 +13,6 @@ public class HelloController {
     public HelloController (HelloService helloService) {
         this.helloService = helloService;
     }
-
     @GetMapping("/")
     public String hello() {
         User user = new User();
