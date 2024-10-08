@@ -2,6 +2,14 @@ spring:
   application:
     name: recode
 
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: false
+  thymeleaf:
+    cache: false
+
   datasource:
     url: jdbc:oracle:thin:@localhost:1521:xe
     username: recodeDB
