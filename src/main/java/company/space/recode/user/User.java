@@ -1,4 +1,4 @@
-package company.space.recode.hello;
+package company.space.recode.user;
 
 import jakarta.persistence.*;
 import lombok.Data;
