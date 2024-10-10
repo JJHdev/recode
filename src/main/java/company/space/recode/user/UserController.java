@@ -27,6 +27,6 @@ public class UserController {
         user.setEmail("goodjob321@hanmail.net");
         user.setStatus("ACTIVE");
         //userService.sayHello(user);
-        return "login";
+        return "user/login";
     }
 }
