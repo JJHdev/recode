@@ -34,3 +34,13 @@ COMMENT ON COLUMN users.STATUS IS '사용자 계정의 상태 (기본값은 ACTI
 COMMENT ON COLUMN users.CREATE_DATE IS '사용자 계정 생성 날짜 (기본값은 현재 날짜)';
 COMMENT ON COLUMN users.UPDATE_DATE IS '사용자 계정 마지막 수정 날짜';
 COMMENT ON COLUMN users.UPDATE_ID IS '레코드를 마지막으로 수정한 사용자의 ID';
+
+CREATE TABLE email_verification (
+                                    email_id NUMBER PRIMARY KEY,
+                                    email VARCHAR2(255) UNIQUE NOT NULL,
+                                    email_status NUMBER(1) DEFAULT 0 NOT NULL,
+                                    code VARCHAR2(6),
+                                    expiration TIMESTAMP
+);
+
+CREATE SEQUENCE email_verification_seq START WITH 1 INCREMENT BY 1;
