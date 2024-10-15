@@ -44,13 +44,9 @@ $(document).ready(function() {
 
 
     $('#id-Check-Btn').click(function () {
-
-        console.log('Button click handler executed'); // 확인용 로그
-        const userId = $('#userId').val();
-
         $.ajax({
             type: 'post',
-            url: contextPath + '/user/checkUser',
+            url: contextPath + 'user/checkUser',
             data: {userId: userId},
             success: function (data) {
                 if (data.success) {
@@ -60,17 +56,17 @@ $(document).ready(function() {
                 }
             },
             error: function (xhr, status, error) {
-                alert('이메일 전송에 실패했습니다: ' + error);
+                alert('아이디 체크에 실패하였습니다.: ' + error);
             }
         });
     });
 
     $('#mail-Send-Btn').click(function () {
         const email = $('#email1').val() + $('#email2').val();
-
+        console.log(contextPath);
         $.ajax({
             type: 'post',
-            url: contextPath + '/email/send',
+            url: contextPath  + 'email/send',
             data: {email: email},
             success: function () {
                 $('#email_number').attr('disabled', false);
@@ -92,7 +88,7 @@ $(document).ready(function() {
 
         $.ajax({
             type: 'post',
-            url: contextPath + '/email/verify',
+            url: contextPath + 'email/verify',
             data: {email: email, code: code},
             success: function (data) {
                 if (data.success) {

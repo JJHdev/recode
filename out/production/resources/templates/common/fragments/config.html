@@ -10,15 +10,12 @@
     <!-- Custom Google font-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800;900&amp;display=swap"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"/>
-    <link id="contextPathHolder" th:data-contextPath="${@environment.getProperty('server.servlet.context-path')}"/>
     <!-- Bootstrap core JS-->
     <script type="text/javascript" th:src="@{/js/bootstrap_bundle_min.js}"></script>
     <script type="text/javascript" th:src="@{/js/scripts.js}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- 타임리프로 호출한 JavaScript 파일 -->
-    <script type="text/javascript">
-        const contextPath = $('#contextPathHolder').attr('data-contextPath');
-    </script>
+    <script th:inline="javascript"> var contextPath = /*[[@{/}]]*/ ''; </script>
 
 </th:block>
 <body></body>

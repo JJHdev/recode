@@ -44,10 +44,6 @@ $(document).ready(function() {
 
 
     $('#id-Check-Btn').click(function () {
-
-        console.log('Button click handler executed'); // 확인용 로그
-        const userId = $('#userId').val();
-
         $.ajax({
             type: 'post',
             url: contextPath + 'user/checkUser',
@@ -60,7 +56,7 @@ $(document).ready(function() {
                 }
             },
             error: function (xhr, status, error) {
-                alert('이메일 전송에 실패했습니다: ' + error);
+                alert('아이디 체크에 실패하였습니다.: ' + error);
             }
         });
     });
