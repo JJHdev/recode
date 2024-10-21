@@ -49,7 +49,6 @@ public class EmailConfig {
         mailSender.setPassword(password);
         mailSender.setDefaultEncoding("UTF-8");
         mailSender.setJavaMailProperties(getMailProperties());
-
         return mailSender;
     }
 
@@ -61,7 +60,6 @@ public class EmailConfig {
         properties.put("mail.smtp.connectiontimeout", connectionTimeout);
         properties.put("mail.smtp.timeout", timeout);
         properties.put("mail.smtp.writetimeout", writeTimeout);
-
         return properties;
     }
 

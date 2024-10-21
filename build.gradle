@@ -33,6 +33,9 @@ dependencies {
 	implementation 'org.hibernate.validator:hibernate-validator:8.0.0.Final'
 	implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
 
+	// BeanValidator
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
 	//thymeleaf
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.4.RELEASE'

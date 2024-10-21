@@ -14,23 +14,30 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    public User userRegi(UserSaveForm userSaveForm){
+        //UserDTO to user
+        User user = new User();
+        user.setUserId(userSaveForm.getUserId());
+        user.setUserName(userSaveForm.getUserName());
+        user.setPassword(userSaveForm.getPassword());
+        user.setEmail(userSaveForm.getFullEmail());
+        user.setGender(userSaveForm.getGender());
+        user.setStatus(userSaveForm.getStatus());
+
+        return userRepository.save(user);
+    }
+
     public ServiceResult<String> checkUser(String userId){
         //UserDTO to user
         User user = new User();
         user.setUserId(userId);
-        //유효성검사
-        /*
-        try {
-            ValidUserIdDuplicate(users);
-            ValidUserIdCheck(users);
+        int reuslt =  userRepository.countByUserId(userId);
+        if(reuslt >= 1){
+            return ServiceResult.failure(userId);
+        }else{
             return ServiceResult.success(userId);
-        } catch (ValidationUserException e){
-            return ServiceResult.failure(e.getMessage());
-        } catch (Exception e) {
-            return ServiceResult.failure("An unexpected error occurred: " + e.getMessage());
         }
-        */
-        return ServiceResult.success(userId);
     }
+
 
 }

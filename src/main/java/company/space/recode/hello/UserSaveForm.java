@@ -1,5 +1,6 @@
 package company.space.recode.hello;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -8,18 +9,18 @@ import lombok.Data;
 @Data
 public class UserSaveForm {
 
-    @NotNull
+    @NotBlank
     private String userId;
 
-    @NotNull
+    @NotBlank
     @Size(max = 50)
     private String userName;
 
-    @NotNull
+    @NotBlank
     @Size(max = 300)
     private String password;
 
-    @NotNull
+    @NotBlank
     @Size(max = 300)
     private String passwordChck;
 
@@ -30,9 +31,11 @@ public class UserSaveForm {
     private String status = "ACTIVE";
 
     @Size(max = 200)
+    @NotBlank
     private String email1;
 
     @Size(max = 200)
+    @NotBlank
     private String email2;
 
     @Size(max = 300)

@@ -4,6 +4,15 @@
         <title>회원가입</title>
         <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
         <script type="text/javascript" th:src="@{/js/user/regiUser.js}"></script>
+        <style>
+            .container {
+                max-width: 560px;
+            }
+            .field-error {
+                border-color: #dc3545;
+                color: #dc3545;
+            }
+        </style>
     </head>
     <!-- Page content-->
     <body>
@@ -19,11 +28,16 @@
 
                     <div class="row gx-5 justify-content-center">
                         <div class="col-lg-8 col-xl-6">
-                            <form class="userForm" th:action="@{/user/regiUser}" method="post">
+                            <form class="userForm" th:action="@{/user/regiUser}" th:object="${user}" method="post">
+
+                                <div th:if="${#fields.hasGlobalErrors()}">
+                                    <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>
+                                </div>
+
                                 <div class="form-group row">
                                     <div class="col-sm-8 mb-3 mb-sm-4">
-                                        <input type="text" id="userId" name="userId" placeholder="유저ID" class="form-control" required />
-                                        <div class="invalid-feedback" data-sb-feedback="userId:required">A name is required.</div>
+                                        <input type="text" th:field="*{userId}" th:errorclass="field-error" placeholder="유저ID" class="form-control" required />
+                                        <div class="field-error" th:errors="*{userId}">이름명오류</div>
                                     </div>
                                     <div class="col-sm-4">
                                         <button type="button" class="btn btn-primary" id="id-Check-Btn">중복아이디 확인</button>
@@ -32,18 +46,20 @@
 
                                 <div class="form-group row">
                                     <div class="col-sm-8 mb-3 mb-sm-4">
-                                        <input type="text" id="userName" name="userName" placeholder="이름" class="form-control" required />
+                                        <input type="text" th:field="*{userName}" placeholder="이름" class="form-control" required />
                                         <div class="invalid-feedback" data-sb-feedback="userName:required">A name is required.</div>
                                     </div>
                                     <div class="col-sm-4">
-                                        <input type="radio" name="gender" value="M" id="male" required><label for="male">남성</label>
-                                        <input type="radio" name="gender" value="F" id="female" required><label for="female">여성</label>
+                                        <th:block th:each="sexCode : ${sysCodes['sexCodes']}" >
+                                            <input type="radio" th:field="*{gender}" th:value="${sexCode.code}" required>
+                                            <label th:for="${#ids.prev('gender')}" th:text="${sexCode.codeNm}"></label>
+                                        </th:block>
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
                                     <div class="col-sm-12 mb-3 mb-sm-4">
-                                        <input type="password" class="form-control form-control-user" id="password" name="password" placeholder="비밀번호" required>
+                                        <input type="password" class="form-control form-control-user" th:field="*{password}" placeholder="비밀번호" required>
                                         <div class="invalid-feedback" data-sb-feedback="password:required">A name is required.</div>
                                     </div>
                                     <div class="col-sm-12 mb-sm-4">
@@ -57,14 +73,11 @@
                                         <div class="invalid-feedback" data-sb-feedback="email1:required">A email1 is required.</div>
                                     </div>
                                     <div class="col-sm-4">
-                                        <select class="form-control" name="email2" id="email2" required>
-                                            <option>@naver.com</option>
-                                            <option>@daum.net</option>
-                                            <option>@gmail.com</option>
-                                            <option>@hanmail.com</option>
-                                            <option>@yahoo.co.kr</option>
+                                        <select class="form-control" th:field="*{email2}" required>
+                                            <option value="">===선택===</option>
+                                            <option th:each="emailCode : ${sysCodes['emailCodes']}" th:value="${emailCode.code}" th:text="${emailCode.code}"></option>
                                         </select>
-                                        <input type="hidden" name="email2_hidden" id="email2_hidden">
+                                        <input type="hidden" id="email2_hidden" name="email2_hidden"/>
                                     </div>
                                     <div class="col-sm-4">
                                         <button type="button" class="btn btn-primary" id="mail-Send-Btn">본인인증</button>
@@ -81,9 +94,7 @@
                                     </div>
                                     <span id="mail-check-warn"></span>
                                 </div>
-
                                 <div class="d-grid" style="margin:20px;"><button type="submit" class="btn btn-primary btn-lg" >회원가입</button></div>
-
                             </form>
                         </div>
                     </div>

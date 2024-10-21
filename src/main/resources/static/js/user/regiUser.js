@@ -10,36 +10,10 @@ $(document).ready(function() {
     $('.userForm').submit(async function (event) {
         event.preventDefault(); // 폼 기본 제출 방지
 
-        const passwordField = $('#password');
-        const passwordCheckField = $('#passwordChck');
+        $('#password').val(await sha256($('#password').val())); // 비밀번호 필드에 해시된 비밀번호 설정
+        $('#passwordChck').val(await sha256($('#passwordChck').val())); // 비밀번호 확인 필드에 해시된 비밀번호 설정
 
-        const password = passwordField.val();
-        const passwordChck = passwordCheckField.val();
-
-        const hashedPassword = await sha256(password);
-        const hashedPasswordChck = await sha256(passwordChck);
-
-        passwordField.val(hashedPassword); // 비밀번호 필드에 해시된 비밀번호 설정
-        passwordCheckField.val(hashedPasswordChck); // 비밀번호 확인 필드에 해시된 비밀번호 설정
-
-        let formData = $(this).serialize(); // 폼 데이터 직렬화
-
-        $.ajax({
-            type: 'POST',
-            url: $(this).attr('action'),
-            data: formData,
-            success: function (data) {
-                if (data.success) {
-                    window.location.href = data.redirect; // 페이지 이동
-                } else {
-                    alert(data.message); // 실패 메시지 표시
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                alert('Registration failed. Please try again.');
-                console.error('Error:', errorThrown);
-            }
-        });
+        document.querySelector('.userForm').submit();
     });
 
 
@@ -47,7 +21,7 @@ $(document).ready(function() {
         $.ajax({
             type: 'post',
             url: contextPath + 'user/checkUser',
-            data: {userId: userId},
+            data: {userId: $('#userId').val()},
             success: function (data) {
                 if (data.success) {
                     alert(data.message); // 성공 메시지 표시
@@ -63,7 +37,6 @@ $(document).ready(function() {
 
     $('#mail-Send-Btn').click(function () {
         const email = $('#email1').val() + $('#email2').val();
-        console.log(contextPath);
         $.ajax({
             type: 'post',
             url: contextPath  + 'email/send',
@@ -83,9 +56,7 @@ $(document).ready(function() {
         let email1 = $('#email1').val();
         let email2 = $('#email2').val();
         let email = email1 + email2;
-
         const code = $('#email_number').val();
-
         $.ajax({
             type: 'post',
             url: contextPath + 'email/verify',
@@ -98,7 +69,6 @@ $(document).ready(function() {
                     $('#email1').attr('readonly', true);
                     $('#email2').attr('disabled', true); // select 요소 비활성화
                     $('#mail-Send-Btn').attr('disabled', true).text('인증완료');
-
                     alert('인증이 완료되었습니다.');
                 } else {
                     alert(data.message); // 실패 메시지 표시

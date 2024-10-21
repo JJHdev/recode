@@ -1,27 +1,48 @@
 package company.space.recode.user;
 
-import ch.qos.logback.core.model.Model;
 import company.space.recode.component.Utils.ServiceResult;
-import company.space.recode.hello.HelloUser;
+import company.space.recode.sys.syscode.SysCode;
+import company.space.recode.sys.syscode.SysCodeService;
+import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+
+@Slf4j
 @Controller
 @RequestMapping("user")
 public class UserController {
 
     private final UserService userService;
-
+    private final SysCodeService sysCodeService;
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, SysCodeService sysCodeService) {
+        this.sysCodeService = sysCodeService;
         this.userService = userService;
+    }
+
+    private ConcurrentHashMap<String,List<SysCode>> resultMap;
+    @PostConstruct
+    public void init() {
+        resultMap = new ConcurrentHashMap<>();
+        resultMap.put("emailCodes", sysCodeService.findSysCode("EMAIL_CODE"));
+        resultMap.put("sexCodes", sysCodeService.findSysCode("SEX_CODE"));
+    }
+    @ModelAttribute("sysCodes")
+    public ConcurrentHashMap<String,List<SysCode>> sysCodeList() {
+        return resultMap;
     }
 
     @GetMapping("/login")
@@ -31,7 +52,29 @@ public class UserController {
 
     @GetMapping("/regiUser")
     public String openRegiUser(Model model) {
+        model.addAttribute("user", new UserSaveForm());
         return "user/regiUser";
+    }
+
+    @PostMapping("/regiUser")
+    public String regiUser(@Validated @ModelAttribute("user") UserSaveForm saveForm, BindingResult bindingResult, RedirectAttributes redirectAttributes, Model model) {
+
+        if(saveForm.isFullEmailValid()){
+            bindingResult.reject("totalEmail", new Object[]{saveForm.getFullEmail()} , null);
+        }
+        if(!saveForm.isPasswordMatching()){
+            bindingResult.reject("MatchPassword", new Object[]{saveForm.getPassword(), saveForm.getPasswordChck()} , null);
+        }
+        if (bindingResult.hasErrors()) {
+            return "user/regiUser";
+        }
+
+        User savedUser = userService.userRegi(saveForm);
+        redirectAttributes.addAttribute("itemId", savedUser.getUserKey());
+        redirectAttributes.addAttribute("status", true);
+
+        model.addAttribute("user", saveForm);
+        return "redirect:/user/regiUser";
     }
 
     @PostMapping("/checkUser")
@@ -42,20 +85,8 @@ public class UserController {
             return ResponseEntity.ok().body(Map.of("success" , true, "message" , userId +"의 아이디는 사용하실수 있습니다."));
         }else{
             String errorMessage = result.getErrorMessage();
-            return ResponseEntity.ok().body(Map.of("success", false, "message", errorMessage));
+            return ResponseEntity.ok().body(Map.of("success", false, "message", userId +"로 가입된 계정이 있습니다."));
         }
     }
 
-    @PostMapping("/regiUser")
-    public String regiUser(Model model) {
-        HelloUser user = new HelloUser();
-        user.setUserId("admin");
-        user.setUserName("이름입력");
-        user.setPassword("123456");
-        user.setGender("M");
-        user.setEmail("goodjob321@hanmail.net");
-        user.setStatus("ACTIVE");
-        System.out.printf("123123");
-        return "user/regiUser";
-    }
 }
