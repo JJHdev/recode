@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @Table(name = "USERS")
 @Data
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_key_generator")
     @SequenceGenerator(name = "user_key_generator", sequenceName = "user_key_seq", allocationSize = 1)
