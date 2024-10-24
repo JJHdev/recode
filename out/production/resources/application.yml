@@ -55,5 +55,6 @@ spring:
 
 logging:
   level:
+    org.springframework.jdbc.core: DEBUG
     org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.hibernate.type.descriptor.sql: TRACE
