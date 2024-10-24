@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html th:replace="~{common/layout/layout_1 :: layout(~{::title},~{::link},~{::section},~{::script})}">
+    <style>
+        .container {
+            max-width: 560px;
+        }
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    </style>
     <head>
         <title>회원가입</title>
         <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
         <script type="text/javascript" th:src="@{/js/user/regiUser.js}"></script>
-        <style>
-            .container {
-                max-width: 560px;
-            }
-            .field-error {
-                border-color: #dc3545;
-                color: #dc3545;
-            }
-        </style>
     </head>
     <!-- Page content-->
     <body>
@@ -90,7 +90,7 @@
                                         <div class="invalid-feedback" data-sb-feedback="userName:required">A name is required.</div>
                                     </div>
                                     <div class="col-sm-4">
-                                        <button type="button" class="btn btn-primary" id="mail-Check-Btn" disabled="disabled">이메일 인증</button>
+                                        <button type="button" class="btn btn-primary" id="mail-Check-Btn" disabled="disabled"  th:text="#{button.check.email}">이메일 인증</button>
                                     </div>
                                     <span id="mail-check-warn"></span>
                                 </div>
