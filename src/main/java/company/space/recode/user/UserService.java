@@ -27,6 +27,10 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public User login(String userId, String password){
+        return userRepository.findByUserId(userId).filter(m -> m.getPassword().equals(password)).orElse(null);
+    }
+
     public ServiceResult<String> checkUser(String userId){
         //UserDTO to user
         User user = new User();

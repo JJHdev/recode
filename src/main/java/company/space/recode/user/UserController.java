@@ -46,8 +46,22 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String userLogin(Model model) {
+    public String openLogin(@ModelAttribute("loginForm") LoginForm form) {
         return "user/login";
+    }
+
+    @PostMapping("/login")
+    public String login(@Validated @ModelAttribute("loginForm") LoginForm form, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            return "user/login";
+        }
+        User user = userService.login(form.getUserId(), form.getPassword());
+        if (user == null) {
+            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
+            return "user/login";
+        }
+        //로그인 성공 처리 TODO
+        return  "redirect:/";
     }
 
     @GetMapping("/regiUser")

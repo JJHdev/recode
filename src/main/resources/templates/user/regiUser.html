@@ -46,8 +46,8 @@
 
                                 <div class="form-group row">
                                     <div class="col-sm-8 mb-3 mb-sm-4">
-                                        <input type="text" th:field="*{userName}" placeholder="이름" class="form-control" required />
-                                        <div class="invalid-feedback" data-sb-feedback="userName:required">A name is required.</div>
+                                        <input type="text" th:field="*{userName}" th:errorclass="field-error" placeholder="이름" class="form-control" required />
+                                        <div class="field-error" th:errors="*{userName}">이메일 오류</div>
                                     </div>
                                     <div class="col-sm-4">
                                         <th:block th:each="sexCode : ${sysCodes['sexCodes']}" >
@@ -69,8 +69,8 @@
 
                                 <div class="form-group row">
                                     <div class="col-sm-4 mb-3 mb-sm-4">
-                                        <input type="text" class="form-control" name="email1" id="email1" placeholder="이메일" required>
-                                        <div class="invalid-feedback" data-sb-feedback="email1:required">A email1 is required.</div>
+                                        <input type="text" class="form-control" th:errorclass="field-error" name="email1" id="email1" placeholder="이메일" required>
+                                        <div class="field-error" th:errors="*{email1}">이메일 오류</div>
                                     </div>
                                     <div class="col-sm-4">
                                         <select class="form-control" th:field="*{email2}" required>
@@ -94,6 +94,7 @@
                                     </div>
                                     <span id="mail-check-warn"></span>
                                 </div>
+                                <div class="field-error" th:errors="*{email2_hidden}">이메일 오류</div>
                                 <div class="d-grid" style="margin:20px;"><button type="submit" class="btn btn-primary btn-lg" >회원가입</button></div>
                             </form>
                         </div>
