@@ -53,6 +53,18 @@ spring:
     auth-code-expiration-millis: 1800000
     sender-email: dlstoddyflcorj@gmail.com
 
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
+
+jwt:
+  secret: askd
+  accessExp : 1800000 # 30 * 60 * 1000 밀리초 (30분)
+  refreshExp : 180000000
+
 logging:
   level:
     org.springframework.jdbc.core: DEBUG
