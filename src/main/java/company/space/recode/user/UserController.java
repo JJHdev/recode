@@ -7,6 +7,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,10 +28,12 @@ public class UserController {
 
     private final UserService userService;
     private final SysCodeService sysCodeService;
+    private final PasswordEncoder passwordEncoder;
     @Autowired
-    public UserController(UserService userService, SysCodeService sysCodeService) {
+    public UserController(UserService userService, SysCodeService sysCodeService, PasswordEncoder passwordEncoder) {
         this.sysCodeService = sysCodeService;
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     private ConcurrentHashMap<String,List<SysCode>> resultMap;
@@ -55,15 +58,11 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return "user/login";
         }
-        User user = userService.login(form.getUserId(), form.getPassword());
+        User user = userService.login(form.getUserId(), passwordEncoder.encode(form.getPassword()));
         if (user == null) {
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
             return "user/login";
         }
-
-
-
-
         //로그인 성공 처리 TODO
         return  "redirect:/";
     }
@@ -87,6 +86,7 @@ public class UserController {
             return "user/regiUser";
         }
 
+        saveForm.setPassword(passwordEncoder.encode(saveForm.getPassword()));
         User savedUser = userService.userRegi(saveForm);
         redirectAttributes.addAttribute("itemId", savedUser.getUserKey());
         redirectAttributes.addAttribute("status", true);

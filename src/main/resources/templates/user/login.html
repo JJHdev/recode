@@ -18,10 +18,13 @@
                     </div>
                     <div class="row gx-5 justify-content-center">
                         <div class="col-lg-8 col-xl-6">
-                            <form class="loginForm" th:action="@{/user/login}" th:object="${loginForm}"  method="post">
+                            <form class="loginForm" th:action="@{/user/login}" th:object="${loginForm}" method="post">
 
                                 <div th:if="${#fields.hasGlobalErrors()}">
                                     <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>
+                                </div>
+                                <div th:if="${param.error}" class="alert alert-danger">
+                                    <p>아이디 또는 비밀번호가 잘못되었습니다.</p>
                                 </div>
 
                                 <div class="form-floating mb-3">
