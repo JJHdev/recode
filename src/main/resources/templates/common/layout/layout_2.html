@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html th:fragment="layout (title,link,headerContent,sectionContent,script)" xmlns:th="http://www.thymeleaf.org">
+    <!--공통 JS / CSS 영역을 관리하는 환경 영역-->
+    <head>
+        <th:block th:insert="~{common/fragments/config :: configFragment}"/>
+        <title th:replace="${title}">레이아웃 헤더 타이틀</title>
+        <th:block th:replace="${link}" />
+        <th:block th:replace="${script}" />
+    </head>
+
+    <body class="d-flex flex-column">
+        <main class="flex-shrink-0">
+            <nav th:insert="~{common/fragments/topMenu :: topMenuFragment}"><p>상단 컨텐츠</p></nav>
+            <header th:replace="${headerContent}"><p>헤더 컨텐츠</p></header>
+            <section th:replace="${sectionContent}"><p>레이아웃 컨텐츠</p></section>
+        </main>
+
+        <footer th:replace="~{common/fragments/footer :: footerFragment}"></footer>
+    </body>
+</html>

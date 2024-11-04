@@ -89,3 +89,16 @@ COMMENT ON COLUMN SYS_CODE.ODR IS '순서';
 COMMENT ON COLUMN SYS_CODE.USE_YN IS '사용여부';
 COMMENT ON COLUMN SYS_CODE.REGI_ID IS '등록아이디';
 COMMENT ON COLUMN SYS_CODE.REGI_DATE IS '등록일';
+
+
+
+
+
+CREATE SEQUENCE token_seq START WITH 1 INCREMENT BY 1;
+
+CREATE TABLE token (
+                       token_Id NUMBER(19) PRIMARY KEY,
+                       user_Id VARCHAR2(255) NOT NULL UNIQUE,
+                       token VARCHAR2(255) NOT NULL,
+                       expiration TIMESTAMP
+);

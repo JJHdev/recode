@@ -18,7 +18,15 @@
                     </div>
                     <div class="row gx-5 justify-content-center">
                         <div class="col-lg-8 col-xl-6">
-                            <form class="loginForm" th:action="@{/user/login}" th:object="${loginForm}"  method="post">
+                            <form class="loginForm" th:action="@{/user/login}" th:object="${loginForm}" method="post">
+
+                                <div th:if="${#fields.hasGlobalErrors()}">
+                                    <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>
+                                </div>
+                                <div th:if="${param.error}" class="alert alert-danger">
+                                    <p>아이디 또는 비밀번호가 잘못되었습니다.</p>
+                                </div>
+
                                 <div class="form-floating mb-3">
                                     <input class="form-control" th:field="*{userId}" type="text" th:errorclass="field-error" placeholder="ID입력"/>
                                     <div class="field-error" th:errors="*{userId}"></div>
@@ -33,7 +41,7 @@
                                         <label class="custom-control-label" for="passwordCheck">로그인상태 유지</label>
                                     </div>
                                 </div>
-                                <div class="d-grid" style="margin:20px;"><button class="btn btn-primary btn-lg disabled" id="submitButton1" type="submit">로그인</button></div>
+                                <div class="d-grid" style="margin:20px;"><button class="btn btn-primary btn-lg" id="submitButton1" type="submit">로그인</button></div>
                                 <hr>
                                 <a th:href="index.html" class="btn"><i class="fab fa-google fa-fw"></i> 구글 로그인</a>
                                 <a th:href="index.html" class="btn"><i class="fab fa-facebook-f fa-fw"></i> 페이스북 로그인</a>

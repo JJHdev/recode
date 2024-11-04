@@ -1,21 +1,8 @@
-async function sha256(message){
-    const msgBuffer = new TextEncoder().encode(message);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-}
-
 $(document).ready(function() {
-
     $('.userForm').submit(async function (event) {
         event.preventDefault(); // 폼 기본 제출 방지
-
-        $('#password').val(await sha256($('#password').val())); // 비밀번호 필드에 해시된 비밀번호 설정
-        $('#passwordChck').val(await sha256($('#passwordChck').val())); // 비밀번호 확인 필드에 해시된 비밀번호 설정
-
         document.querySelector('.userForm').submit();
     });
-
 
     $('#id-Check-Btn').click(function () {
         $.ajax({
@@ -23,6 +10,7 @@ $(document).ready(function() {
             url: contextPath + 'user/checkUser',
             data: {userId: $('#userId').val()},
             success: function (data) {
+                console.log(data);
                 if (data.success) {
                     alert(data.message); // 성공 메시지 표시
                 } else {
