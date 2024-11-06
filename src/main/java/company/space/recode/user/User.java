@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "USERS")
@@ -46,6 +47,9 @@ public class User {
 
     @Column(name = "UPDATE_ID")
     private String updateId;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<String> roles;
 
     @PrePersist
     protected void onCreate() {
