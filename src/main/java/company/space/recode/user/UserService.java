@@ -2,16 +2,21 @@ package company.space.recode.user;
 
 import company.space.recode.component.Utils.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository){
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder){
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User userRegi(UserSaveForm userSaveForm){
@@ -28,7 +33,12 @@ public class UserService {
     }
 
     public User login(String userId, String password){
-        return userRepository.findByUserId(userId).filter(m -> m.getPassword().equals(password)).orElse(null);
+        User user = userRepository.findByUserId(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        if(passwordEncoder.matches(password, user.getPassword())){
+            return user;
+        } else {
+            throw new BadCredentialsException("Wrong password");
+        }
     }
 
     public ServiceResult<String> checkUser(String userId){

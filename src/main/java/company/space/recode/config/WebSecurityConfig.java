@@ -1,11 +1,14 @@
 package company.space.recode.config;
 
+import company.space.recode.component.Utils.JwtUtil;
+import company.space.recode.component.filter.JwtAuthenticationFilter;
 import company.space.recode.component.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -15,14 +18,15 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
+@EnableMethodSecurity
 @Configuration
 public class WebSecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsServiceImpl;
 
-    public WebSecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, UserDetailsServiceImpl userDetailsServiceImpl) {
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    public WebSecurityConfig(JwtUtil jwtUtil, UserDetailsServiceImpl userDetailsServiceImpl) {
+        this.jwtUtil = jwtUtil;
         this.userDetailsServiceImpl = userDetailsServiceImpl;
     }
 
@@ -30,13 +34,13 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authorize -> authorize
-                    .requestMatchers("/user/login", "/user/regiUser", "/user/checkUser","/user/sysCodes" ,"/email/send", "/email/verify", "/js/**", "/css/**", "/images/**", "/assets/**").permitAll()
+                    .requestMatchers("/js/**", "/css/**", "/images/**", "/assets/**").permitAll()
+                    .requestMatchers("/user/login", "/user/regiUser", "/user/checkUser", "/user/sysCodes", "/email/send", "/email/verify").permitAll()
                     .anyRequest().authenticated() // 나머지 요청은 인증 필요
             )
-            .sessionManagement(session -> session
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .addFilterBefore(new JwtAuthenticationFilter(jwtUtil, userDetailsServiceImpl), UsernamePasswordAuthenticationFilter.class)
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             );
-            http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

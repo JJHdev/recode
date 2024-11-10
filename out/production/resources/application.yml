@@ -33,6 +33,10 @@ spring:
     show-sql: true
     database: oracle
     database-platform: org.hibernate.dialect.OracleDialect
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
 
   # Email
   mail:
@@ -61,13 +65,14 @@ server:
       enabled: true
 
 jwt:
-  secret: askd
-  accessExp : 1800000 # 30 * 60 * 1000 밀리초 (30분)
-  refreshExp : 180000000
+  secret: a9v8s7d6f5e4r3t2y1z0x9w8v7u6t5s4
+  accessExp: 1800000    # 30분을 밀리초로
+  refreshExp: 604800000 # 7일을 밀리초로
 
 logging:
   level:
     org.springframework.jdbc.core: DEBUG
     org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql: TRACE
+    org.hibernate.orm.jdbc.bind: trace
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
     org.springframework.security: DEBUG

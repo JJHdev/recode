@@ -3,6 +3,8 @@ package company.space.recode.user;
 import company.space.recode.component.Utils.ServiceResult;
 import company.space.recode.sys.syscode.SysCode;
 import company.space.recode.sys.syscode.SysCodeService;
+import company.space.recode.token.AuthController;
+import company.space.recode.token.JwtResponse;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +31,14 @@ public class UserController {
     private final UserService userService;
     private final SysCodeService sysCodeService;
     private final PasswordEncoder passwordEncoder;
+    private final AuthController authController;
+
     @Autowired
-    public UserController(UserService userService, SysCodeService sysCodeService, PasswordEncoder passwordEncoder) {
+    public UserController(UserService userService, SysCodeService sysCodeService, PasswordEncoder passwordEncoder,AuthController authController) {
         this.sysCodeService = sysCodeService;
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.authController = authController;
     }
 
     private ConcurrentHashMap<String,List<SysCode>> resultMap;
@@ -58,13 +63,25 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return "user/login";
         }
-        User user = userService.login(form.getUserId(), passwordEncoder.encode(form.getPassword()));
+        User user = userService.login(form.getUserId(), form.getPassword());
         if (user == null) {
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
             return "user/login";
         }
-        //로그인 성공 처리 TODO
-        return  "redirect:/";
+
+        ResponseEntity<?> response = authController.authenticateUser(form.getUserId(), form.getPassword());
+        if (response.getStatusCode().is2xxSuccessful()) {
+            JwtResponse jwtResponse = (JwtResponse) response.getBody();
+
+            // 토큰을 세션 또는 쿠키에 저장하거나, 프론트엔드에 전달할 수 있습니다.
+            redirectAttributes.addFlashAttribute("accessToken", jwtResponse.getAccessToken());
+            redirectAttributes.addFlashAttribute("refreshToken", jwtResponse.getRefreshToken());
+            //로그인 성공 처리 TODO
+            return "redirect:/";
+        } else {
+            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
+            return "user/login";
+        }
     }
 
     @GetMapping("/regiUser")

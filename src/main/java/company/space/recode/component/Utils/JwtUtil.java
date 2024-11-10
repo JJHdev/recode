@@ -2,6 +2,7 @@ package company.space.recode.component.Utils;
 
 import company.space.recode.component.security.UserDetailsServiceImpl;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -25,8 +26,7 @@ import java.util.Date;
 @Component
 @Log4j2
 public class JwtUtil {
-
-
+    
     private final Key secretKey;
     private final long ACCESS_TOKEN_TIME;
     private final long REFRESH_TOKEN_TIME;
@@ -55,14 +55,15 @@ public class JwtUtil {
                 .signWith(secretKey , SignatureAlgorithm.HS256)
                 .compact();
     }
-
+    //토큰에서 유효성검사
     public boolean validateToken(String token) {
         try {
-            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+            parseClaims(token);
             return true;
-        } catch (Exception e) {
-            return false;
+        } catch (JwtException | IllegalArgumentException e) {
+            //에러처리
         }
+        return false;
     }
     // 토큰에서 사용자명 추출
     public String getUsername(String token) {
@@ -75,5 +76,8 @@ public class JwtUtil {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+    public long getRefreshTokenValidity() {
+        return this.REFRESH_TOKEN_TIME;
     }
 }

@@ -48,8 +48,8 @@ public class User {
     @Column(name = "UPDATE_ID")
     private String updateId;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    private Set<String> roles;
+/*    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<String> roles;*/
 
     @PrePersist
     protected void onCreate() {
