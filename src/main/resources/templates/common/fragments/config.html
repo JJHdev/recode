@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content />
     <meta name="author" content />
+    <script th:inline="javascript">
+        // 토큰을 localStorage에 저장
+        localStorage.setItem('accessToken', /*[[${accessToken}]]*/ '');
+        localStorage.setItem('refreshToken', /*[[${refreshToken}]]*/ '');
+        // <script> 태그 제거
+        document.currentScript.remove();
+    </script>
     <!-- Favicon & CSS-->
     <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}" />
     <!-- Custom Google font-->
@@ -14,6 +21,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800;900&amp;display=swap"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"/>
     <!-- Bootstrap core JS-->
+    <script type="text/javascript" th:src="@{/js/main.js}"></script>
     <script type="text/javascript" th:src="@{/js/bootstrap_bundle_min.js}"></script>
     <script type="text/javascript" th:src="@{/js/scripts.js}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

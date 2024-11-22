@@ -35,8 +35,12 @@ public class WebSecurityConfig {
         http.csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authorize -> authorize
                     .requestMatchers("/js/**", "/css/**", "/images/**", "/assets/**").permitAll()
-                    .requestMatchers("/user/login", "/user/regiUser", "/user/checkUser", "/user/sysCodes", "/email/send", "/email/verify").permitAll()
+                    .requestMatchers("/","/user/login", "/user/regiUser", "/user/checkUser", "/user/sysCodes", "/email/send", "/email/verify").permitAll()
                     .anyRequest().authenticated() // 나머지 요청은 인증 필요
+            )
+            .exceptionHandling(exception -> exception.authenticationEntryPoint((request, response, authException) -> {
+                        response.sendRedirect("/user/login");
+                    })
             )
             .addFilterBefore(new JwtAuthenticationFilter(jwtUtil, userDetailsServiceImpl), UsernamePasswordAuthenticationFilter.class)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

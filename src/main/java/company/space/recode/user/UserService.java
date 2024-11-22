@@ -33,12 +33,30 @@ public class UserService {
     }
 
     public User login(String userId, String password){
-        User user = userRepository.findByUserId(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User user = userRepository.findByUserId(userId).orElseGet(() -> {
+            // 빈 User 객체 생성
+            User emptyUser = new User();
+            emptyUser.setUserId(null); // 필요하면 기본값 설정
+            emptyUser.setUserName("Anonymous");
+            return emptyUser;
+        });
+
         if(passwordEncoder.matches(password, user.getPassword())){
             return user;
         } else {
-            throw new BadCredentialsException("Wrong password");
+            return new User();
         }
+    }
+
+    public User findUserOrReturnEmpty(String userId) {
+        return userRepository.findByUserId(userId)
+                .orElseGet(() -> {
+                    // 빈 User 객체 생성
+                    User emptyUser = new User();
+                    emptyUser.setUserId(null); // 필요하면 기본값 설정
+                    emptyUser.setUserName("Anonymous");
+                    return emptyUser;
+                });
     }
 
     public ServiceResult<String> checkUser(String userId){
