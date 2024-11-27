@@ -6,8 +6,11 @@ import company.space.recode.sys.syscode.SysCodeService;
 import company.space.recode.token.AuthController;
 import company.space.recode.token.JwtResponse;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -32,6 +35,7 @@ public class UserController {
     private final SysCodeService sysCodeService;
     private final PasswordEncoder passwordEncoder;
     private final AuthController authController;
+    @Value("${jwt.refreshExp}") long REFRESH_TOKEN_TIME;
 
     @Autowired
     public UserController(UserService userService, SysCodeService sysCodeService, PasswordEncoder passwordEncoder,AuthController authController) {
@@ -59,7 +63,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(@Validated @ModelAttribute("loginForm") LoginForm form, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String login(@Validated @ModelAttribute("loginForm") LoginForm form, BindingResult bindingResult, RedirectAttributes redirectAttributes, HttpServletResponse response) {
         if (bindingResult.hasErrors()) {
             return "user/login";
         }
@@ -69,13 +73,13 @@ public class UserController {
             return "user/login";
         }
 
-        ResponseEntity<?> response = authController.authenticateUser(form.getUserId(), form.getPassword());
-        if (response.getStatusCode().is2xxSuccessful()) {
-            JwtResponse jwtResponse = (JwtResponse) response.getBody();
+        ResponseEntity<?> responseToken = authController.authenticateUser(form.getUserId(), form.getPassword());
+        if (responseToken.getStatusCode().is2xxSuccessful()) {
+            JwtResponse jwtResponse = (JwtResponse) responseToken.getBody();
 
             // 토큰을 세션 또는 쿠키에 저장하거나, 프론트엔드에 전달할 수 있습니다.
             redirectAttributes.addFlashAttribute("accessToken", jwtResponse.getAccessToken());
-            redirectAttributes.addFlashAttribute("refreshToken", jwtResponse.getRefreshToken());
+            createCookie("refreshToken", jwtResponse.getRefreshToken(),response);
             //로그인 성공 처리 TODO
             return "redirect:/";
         } else {
@@ -122,6 +126,15 @@ public class UserController {
             String errorMessage = result.getErrorMessage();
             return ResponseEntity.ok().body(Map.of("success", false, "message", userId +"로 가입된 계정이 있습니다."));
         }
+    }
+
+    private void createCookie (String cookieName , String jwtToken , HttpServletResponse response){
+        Cookie refreshTokenCookie = new Cookie(cookieName, jwtToken);
+        refreshTokenCookie.setHttpOnly(true);
+        //refreshTokenCookie.setSecure(true);
+        //refreshTokenCookie.setAttribute("SameSite", "Strict");
+        refreshTokenCookie.setMaxAge((int)REFRESH_TOKEN_TIME); // 1시간
+        response.addCookie(refreshTokenCookie);
     }
 
 }
