@@ -41,12 +41,17 @@ public class WebSecurityConfig {
         http.csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authorize -> authorize
                     .requestMatchers("/error", "/js/**", "/css/**", "/images/**", "/assets/**",  "/static/**").permitAll()
-                    .requestMatchers("/user/login", "/user/regiUser", "/user/checkUser", "/user/sysCodes", "/email/send", "/email/verify").permitAll()
+                    .requestMatchers("/user/login", "/user/regiUser", "/user/checkUser", "/user/sysCodes", "/email/send", "/email/verify").anonymous()
                     .anyRequest().authenticated() // 나머지 요청은 인증 필요
             )
-            .exceptionHandling(exception -> exception.authenticationEntryPoint((request, response, authException) -> {
-                response.sendRedirect("/user/login");
-            }))
+            .exceptionHandling(exception -> exception
+                    .authenticationEntryPoint((request, response, authException) -> {
+                        response.sendRedirect("/user/login"); // 인증되지 않은 사용자
+                    })
+                    .accessDeniedHandler((request, response, accessDeniedException) -> {
+                        response.sendRedirect("/dashboard"); // todo 인증된 사용자는 대시보드로 리다이렉트
+                    })
+            )
             .addFilterBefore(new JwtAuthenticationFilter(jwtUtil, userDetailsServiceImpl), UsernamePasswordAuthenticationFilter.class)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             );
