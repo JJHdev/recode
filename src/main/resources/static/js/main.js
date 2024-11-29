@@ -44,22 +44,27 @@ function authSubmit(formId, url, method = 'POST') {
 
 function authAnchor(url) {
     // JWT 토큰 가져오기
-    const token = localStorage.getItem('accessToken');
-
+    const token = getCookieValue('accessToken');
+    console.log(token);
+    alert(1);
     // HTTP 요청으로 토큰 전달
     fetch(url, {
         method: 'POST', // 필요한 HTTP 메서드
         headers: {
             'Authorization': `Bearer ${token}`
         },
-    })
-        .then(response => {
-            if (response.ok) {
-                // 요청 성공 시 페이지 이동
-                window.location.href = url;
-            } else {
-                console.error('Failed to authenticate:', response.status);
-            }
-        })
-        .catch(error => console.error('Error:', error));
+    }).then(response => {
+        console.error('Failed to authenticate:', response);
+    }).catch(error => console.error('Error:', error));
+}
+
+function getCookieValue(cookieName) {
+    const cookies = document.cookie.split('; ');
+    for (let i = 0; i < cookies.length; i++) {
+        const [name, value] = cookies[i].split('=');
+        if (name === cookieName) {
+            return value;
+        }
+    }
+    return null; // 쿠키가 없을 경우
 }

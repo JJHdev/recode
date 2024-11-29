@@ -36,6 +36,7 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
     private final AuthController authController;
     @Value("${jwt.refreshExp}") long REFRESH_TOKEN_TIME;
+    @Value("${jwt.accessExp}") long ACCESS_TOKEN_TIME;
 
     @Autowired
     public UserController(UserService userService, SysCodeService sysCodeService, PasswordEncoder passwordEncoder,AuthController authController) {
@@ -77,9 +78,11 @@ public class UserController {
         if (responseToken.getStatusCode().is2xxSuccessful()) {
             JwtResponse jwtResponse = (JwtResponse) responseToken.getBody();
 
-            // 토큰을 세션 또는 쿠키에 저장하거나, 프론트엔드에 전달할 수 있습니다.
-            redirectAttributes.addFlashAttribute("accessToken", jwtResponse.getAccessToken());
-            createCookie("refreshToken", jwtResponse.getRefreshToken(),response);
+            createCookie("accessToken",  jwtResponse.getAccessToken() , false , false, (int)ACCESS_TOKEN_TIME, response);
+            createCookie("refreshToken", jwtResponse.getRefreshToken(), false , false, (int)REFRESH_TOKEN_TIME, response);
+            //createCookie("accessToekn",  jwtResponse.getAccessToken() , false , true, (int)ACCESS_TOKEN_TIME, response);
+            //createCookie("refreshToken", jwtResponse.getRefreshToken(), true , true, (int)REFRESH_TOKEN_TIME, response);
+
             //로그인 성공 처리 TODO
             return "redirect:/";
         } else {
@@ -128,13 +131,13 @@ public class UserController {
         }
     }
 
-    private void createCookie (String cookieName , String jwtToken , HttpServletResponse response){
-        Cookie refreshTokenCookie = new Cookie(cookieName, jwtToken);
-        refreshTokenCookie.setHttpOnly(true);
-        //refreshTokenCookie.setSecure(true);
-        //refreshTokenCookie.setAttribute("SameSite", "Strict");
-        refreshTokenCookie.setMaxAge((int)REFRESH_TOKEN_TIME); // 1시간
-        response.addCookie(refreshTokenCookie);
+    private void createCookie (String cookieName , String jwtToken , Boolean httpOnly, Boolean secure, int cookieTime, HttpServletResponse response){
+        Cookie cookie = new Cookie(cookieName, jwtToken);
+        cookie.setHttpOnly(httpOnly); // 클라이언트 접근 가능
+        cookie.setSecure(secure);   // HTTPS에서만 전송
+        cookie.setPath("/");
+        cookie.setMaxAge(cookieTime); // 15분
+        response.addCookie(cookie);
     }
 
 }

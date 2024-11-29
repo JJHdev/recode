@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,19 +30,23 @@ public class WebSecurityConfig {
         this.jwtUtil = jwtUtil;
         this.userDetailsServiceImpl = userDetailsServiceImpl;
     }
-
+    /*
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers("/js/**", "/css/**", "/images/**", "/assets/**" , "/static/**");
+    }
+    */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authorize -> authorize
-                    .requestMatchers("/js/**", "/css/**", "/images/**", "/assets/**").permitAll()
-                    .requestMatchers("/","/user/login", "/user/regiUser", "/user/checkUser", "/user/sysCodes", "/email/send", "/email/verify").permitAll()
+                    .requestMatchers("/error", "/js/**", "/css/**", "/images/**", "/assets/**",  "/static/**").permitAll()
+                    .requestMatchers("/user/login", "/user/regiUser", "/user/checkUser", "/user/sysCodes", "/email/send", "/email/verify").permitAll()
                     .anyRequest().authenticated() // 나머지 요청은 인증 필요
             )
             .exceptionHandling(exception -> exception.authenticationEntryPoint((request, response, authException) -> {
-                        response.sendRedirect("/user/login");
-                    })
-            )
+                response.sendRedirect("/user/login");
+            }))
             .addFilterBefore(new JwtAuthenticationFilter(jwtUtil, userDetailsServiceImpl), UsernamePasswordAuthenticationFilter.class)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             );
