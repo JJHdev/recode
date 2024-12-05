@@ -49,7 +49,7 @@ public class WebSecurityConfig {
                         response.sendRedirect("/user/login"); // 인증되지 않은 사용자
                     })
                     .accessDeniedHandler((request, response, accessDeniedException) -> {
-                        response.sendRedirect("/dashboard"); // todo 인증된 사용자는 대시보드로 리다이렉트
+                        response.sendRedirect("/"); // todo 인증된 사용자는 대시보드로 리다이렉트
                     })
             )
             .addFilterBefore(new JwtAuthenticationFilter(jwtUtil, userDetailsServiceImpl), UsernamePasswordAuthenticationFilter.class)

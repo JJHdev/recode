@@ -3,15 +3,20 @@
     <th:block th:fragment="topMenuFragment">
         <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
             <div class="container px-5">
-                <a class="navbar-brand" href="index.html"><span class="fw-bolder text-primary">Start Bootstrap</span></a>
+                <a class="navbar-brand" th:href="@{/}"><span class="fw-bolder text-primary">Start Bootstrap</span></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
                         <li class="nav-item"><a class="nav-link" th:href="@{/}">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="resume.html">Resume</a></li>
-                        <li class="nav-item"><a class="nav-link" href="projects.html">Projects</a></li>
-                        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
-                        <li class="nav-item"><a class="nav-link" th:href="@{/user/login}">login</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{/goResume.do}">Resume</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{/goProjects.do}">Projects</a></li>
+                        <li class="nav-item"><a class="nav-link" th:href="@{/goContact.do}">Contact</a></li>
+<!--                        <li class="nav-item" th:if="${#authentication.principal != 'anonymousUser'}">
+                            <a class="nav-link" th:href="@{/user/logout}">Logout</a>
+                        </li>
+                        <li class="nav-item" th:if="${#authentication.principal == 'anonymousUser'}">
+                            <a class="nav-link" th:href="@{/user/login}">Login</a>
+                        </li>-->
                     </ul>
                 </div>
             </div>

@@ -77,7 +77,20 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
     }
-    public long getRefreshTokenValidity() {
+    public long getRefreshTokenTime() {
         return this.REFRESH_TOKEN_TIME;
+    }
+
+    public long getAccessTokenTime() {
+        return this.REFRESH_TOKEN_TIME;
+    }
+
+    public boolean isTokenExpired(String token) {
+        try {
+            Date expiration = parseClaims(token).getExpiration();
+            return expiration.before(new Date());
+        } catch (Exception e) {
+            return true; // 파싱 실패 시 만료로 간주
+        }
     }
 }

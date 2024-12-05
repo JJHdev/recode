@@ -44,19 +44,45 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String token = resolveToken(request);
+        String accessToken = resolveToken(request, "accessToken");
 
-        if (token != null && jwtUtil.validateToken(token)) {
-            String username = jwtUtil.getUsername(token);
+          if (accessToken != null && jwtUtil.validateToken(accessToken)) {
+
+            String username = jwtUtil.getUsername(accessToken);
             UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(username);
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
+              System.out.println("Principal1: " + authentication.getPrincipal());
+              System.out.println("Authorities1: " + authentication.getAuthorities());
+        }else if(accessToken == null || jwtUtil.isTokenExpired(accessToken)){
+
+              String refreshToken = resolveToken(request, "refreshToken");
+              if (refreshToken != null && jwtUtil.validateToken(refreshToken)) {
+
+                  String username = jwtUtil.getUsername(refreshToken);
+                  UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(username);
+
+                  String newAccessToken = jwtUtil.createAccessToken(username);
+
+                  Cookie cookie = new Cookie("accessToken", newAccessToken);
+                  cookie.setHttpOnly(false);
+                  cookie.setSecure(false);
+                  cookie.setPath("/");
+                  cookie.setMaxAge((int) jwtUtil.getAccessTokenTime());
+                  response.addCookie(cookie);
+
+                  UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                  SecurityContextHolder.getContext().setAuthentication(authentication);
+                  System.out.println("Principal2: " + authentication.getPrincipal());
+                  System.out.println("Authorities2: " + authentication.getAuthorities());
+              }
         }
+
         filterChain.doFilter(request, response);
     }
 
     // 헤더에서 토큰 추출
-    private String resolveToken(HttpServletRequest request) {
+    private String resolveToken(HttpServletRequest request, String tokenName) {
         // 1. 헤더에서 토큰 확인
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
@@ -64,7 +90,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         // 2. 요청 파라미터에서 토큰 확인
-        String tokenParam = request.getParameter("accessToken");
+        String tokenParam = request.getParameter(tokenName);
         if (StringUtils.hasText(tokenParam)) {
             return tokenParam;
         }
@@ -73,7 +99,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if ("accessToken".equals(cookie.getName())) {
+                if (tokenName.equals(cookie.getName())) {
                     return cookie.getValue();
                 }
             }
@@ -85,8 +111,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (StringUtils.hasText(body)) {
                 ObjectMapper mapper = new ObjectMapper();
                 Map<String, String> bodyMap = mapper.readValue(body, Map.class);
-                if (bodyMap.containsKey("accessToken")) {
-                    return bodyMap.get("accessToken");
+                if (bodyMap.containsKey(tokenName)) {
+                    return bodyMap.get(tokenName);
                 }
             }
         } catch (IOException e) {
@@ -94,5 +120,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         return null;
+    }
+
+    private void createCookie (String cookieName , String jwtToken , Boolean httpOnly, Boolean secure, int cookieTime, HttpServletResponse response){
+        Cookie cookie = new Cookie(cookieName, jwtToken);
+        cookie.setHttpOnly(httpOnly); // 클라이언트 접근 가능
+        cookie.setSecure(secure);   // HTTPS에서만 전송
+        cookie.setPath("/");
+        cookie.setMaxAge(cookieTime); // 15분
+        response.addCookie(cookie);
     }
 }
