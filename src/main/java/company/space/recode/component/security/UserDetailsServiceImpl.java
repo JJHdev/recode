@@ -2,6 +2,7 @@ package company.space.recode.component.security;
 
 import company.space.recode.sys.syscode.SysCodeService;
 import company.space.recode.user.User;
+import company.space.recode.user.UserDtoDetails;
 import company.space.recode.user.UserRepository;
 import company.space.recode.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
         User user = userRepository.findByUserId(userId).orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을수 없습니다. " + userId));
-
-        return new org.springframework.security.core.userdetails.User(user.getUserId(), user.getPassword(), new ArrayList<>());
+        return new UserDtoDetails(user);
     }
 }

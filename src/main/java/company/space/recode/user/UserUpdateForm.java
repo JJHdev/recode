@@ -20,6 +20,9 @@ public class UserUpdateForm {
     private String gender;
 
     @Size(max = 200)
+    private String userRole;
+
+    @Size(max = 200)
     private String email1;
 
     @Size(max = 200)

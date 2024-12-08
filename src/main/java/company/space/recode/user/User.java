@@ -36,6 +36,9 @@ public class User {
     @Column(name = "PROFILE_PICTURE_URL")
     private String profilePictureUrl;
 
+    @Column(name = "USER_ROLE")
+    private String userRole;
+
     @Column(name = "STATUS", nullable = false)
     private String status;
 
@@ -55,6 +58,7 @@ public class User {
     protected void onCreate() {
         this.createDate = LocalDateTime.now();
         this.updateDate = LocalDateTime.now();
+        this.userRole = "ROLE_USER";
     }
 
     @PreUpdate

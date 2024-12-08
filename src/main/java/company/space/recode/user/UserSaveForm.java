@@ -43,6 +43,10 @@ public class UserSaveForm {
     @Size(max = 300)
     private String profilePictureUrl;
 
+    @Size(max = 200)
+    private String userRole;
+
+
     public boolean isFullEmailValid() {
         if (email1 == null || email1.isEmpty() || email2_hidden == null || email2_hidden.isEmpty()) {
             return false;
