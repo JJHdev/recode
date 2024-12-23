@@ -1,5 +1,7 @@
 package company.space.recode.component;
 
+import company.space.recode.user.User;
+import company.space.recode.user.UserDtoDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
@@ -17,10 +19,17 @@ public class AuthInterceptor implements HandlerInterceptor {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             Object principal = authentication.getPrincipal();
+
             if (principal instanceof UserDetails) {
                 UserDetails userObject = (UserDetails) principal;
                 if (modelAndView != null) {
                     modelAndView.addObject("userObject", userObject);
+                }
+            } else {
+                User user = new User();
+                UserDtoDetails defaultUser = new UserDtoDetails(user);
+                if (modelAndView != null) {
+                    modelAndView.addObject("userObject", defaultUser);
                 }
             }
         }
