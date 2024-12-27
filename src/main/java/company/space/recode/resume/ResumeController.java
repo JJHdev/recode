@@ -9,8 +9,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Slf4j
 @Controller
 public class ResumeController {
-    @GetMapping("/goResume.do")
+    @GetMapping("/viewResume.do")
     public String goResume(Model model, HttpServletRequest request) {
+        // FlashAttribute로 전달된 토큰 확인
+        return "resume/resume";
+    }
+    @GetMapping("/regiResume.do")
+    public String regiResume(Model model, HttpServletRequest request) {
         // FlashAttribute로 전달된 토큰 확인
         return "resume/resume";
     }

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Slf4j
 @Controller
 public class ProjectController {
-    @GetMapping("/goProjects.do")
+    @GetMapping("/viewProjects.do")
     public String goProjects(Model model, HttpServletRequest request) {
         // FlashAttribute로 전달된 토큰 확인
         return "project/projects";

@@ -2,7 +2,9 @@ package company.space.recode.config;
 
 import company.space.recode.component.Utils.JwtUtil;
 import company.space.recode.component.filter.JwtAuthenticationFilter;
+import company.space.recode.component.filter.UserLogoutHandler;
 import company.space.recode.component.security.UserDetailsServiceImpl;
+import company.space.recode.token.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -37,7 +40,7 @@ public class WebSecurityConfig {
     }
     */
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthService authService) throws Exception {
         http.csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authorize -> authorize
                     .requestMatchers("/error", "/js/**", "/css/**", "/images/**", "/assets/**",  "/static/**").permitAll()
@@ -51,6 +54,14 @@ public class WebSecurityConfig {
                     .accessDeniedHandler((request, response, accessDeniedException) -> {
                         response.sendRedirect("/"); // todo 인증된 사용자는 대시보드로 리다이렉트
                     })
+            )
+            .logout(logout -> logout
+                    .logoutUrl("/logout")
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
+                    .logoutSuccessUrl("/user/login")
+                    .deleteCookies("accessToken","refreshToken")
+                    .invalidateHttpSession(true)
+                    .addLogoutHandler(new UserLogoutHandler(authService, jwtUtil))
             )
             .addFilterBefore(new JwtAuthenticationFilter(jwtUtil, userDetailsServiceImpl), UsernamePasswordAuthenticationFilter.class)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

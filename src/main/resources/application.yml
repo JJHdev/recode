@@ -6,7 +6,7 @@ spring:
     livereload:
       enabled: true
     restart:
-      enabled: true
+      enabled: false
   thymeleaf:
     cache: false
     check-template-location: true

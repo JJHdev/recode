@@ -1,6 +1,20 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
     <th:block th:fragment="topMenuFragment">
+        <style>
+            /* 드롭다운 메뉴 위치 조정 */
+            .navbar .dropdown-menu {
+                left: 50%; /* 부모 요소 기준으로 가로 중앙 정렬 */
+                transform: translateX(-50%); /* 중앙 정렬을 위한 보정 */
+                text-align: center;
+            }
+
+            .navbar .dropdown:hover .dropdown-menu {
+                display: block;
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        </style>
         <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
             <div class="container px-5">
                 <a class="navbar-brand" th:href="@{/}"><span class="fw-bolder text-primary">Start Bootstrap</span></a>
@@ -8,12 +22,38 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
                         <li class="nav-item"><a class="nav-link" th:href="@{/}">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" th:href="@{/goResume.do}">Resume</a></li>
-                        <li class="nav-item"><a class="nav-link" th:href="@{/goProjects.do}">Projects</a></li>
-                        <li class="nav-item"><a class="nav-link" th:href="@{/goContact.do}">Contact</a></li>
-                        <li class="nav-item" th:if="${userObject.userId != null}"><a class="nav-link" th:href="@{/user/logout}">Logout</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="resumeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Resume
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="resumeDropdown">
+                                <li><a class="dropdown-item" th:href="@{/goRegister.do}">등록하기</a></li>
+                                <li><a class="dropdown-item" th:href="@{/viewResume.do}">조회하기</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="projectsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Projects
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="projectsDropdown">
+                                <li><a class="dropdown-item" th:href="@{/goRegister.do}">등록하기</a></li>
+                                <li><a class="dropdown-item" th:href="@{/viewProjects.do}">조회하기</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="contactDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Contact
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="contactDropdown">
+                                <li><a class="dropdown-item" th:href="@{/goRegister.do}">등록하기</a></li>
+                                <li><a class="dropdown-item" th:href="@{/viewContact.do}">조회하기</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item" th:if="${userObject.userId != null}"><a class="nav-link" th:href="@{/logout}">Logout</a></li>
                         <li class="nav-item" th:if="${userObject.userId == null}"><a class="nav-link" th:href="@{/user/login}">Login</a></li>
-                        <li class="nav-item"><a class="nav-link" th:text="${userObject.userName +'의 계정'}"></a></li>
+                        <li class="nav-item" th:if="${userObject.userName != null}">
+                            <a class="nav-link" th:text="${userObject.userName + '의 계정'}"></a>
+                        </li>
                     </ul>
                 </div>
             </div>

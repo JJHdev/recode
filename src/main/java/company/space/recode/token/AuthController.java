@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import java.util.Optional;
 import java.io.IOException;
@@ -65,14 +66,6 @@ public class AuthController {
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 Refresh Token입니다.");
         }
-    }
-
-    // 로그아웃 엔드포인트
-    @PostMapping("/logout")
-    public ResponseEntity<?> logoutUser(String refreshToken) {
-        UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(jwtUtil.getUsername(refreshToken));
-        authService.deleteByUserId(userDetails.getUsername());
-        return ResponseEntity.ok("로그아웃되었습니다.");
     }
 
 }

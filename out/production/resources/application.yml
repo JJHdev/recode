@@ -2,11 +2,15 @@ spring:
   application:
     name: recode
 
+  profiles:
+    active: default
+
   devtools:
     livereload:
       enabled: true
     restart:
       enabled: true
+
   thymeleaf:
     cache: false
     check-template-location: true
@@ -15,7 +19,7 @@ spring:
     enabled: true
 
   datasource:
-    url: jdbc:oracle:thin:@localhost:1521:xe
+    url: jdbc:oracle:thin:@localhost:1521/xe
     username: recodeDB
     password: 1234
     driver-class-name: oracle.jdbc.OracleDriver
