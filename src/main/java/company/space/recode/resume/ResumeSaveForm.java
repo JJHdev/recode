@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 @Data
 public class ResumeSaveForm {
 
+    private Long seqCode;
+
     @NotBlank
     @Size(max = 50)
     private String resumeGrbun;
@@ -27,5 +29,13 @@ public class ResumeSaveForm {
     private LocalDateTime startDate;
 
     private LocalDateTime endDate;
+
+    private String regiId;
+
+    private LocalDateTime regiDate;
+
+    private String updtId;
+
+    private LocalDateTime updtDate;
 
 }

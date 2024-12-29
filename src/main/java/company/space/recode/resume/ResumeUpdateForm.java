@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 @Data
 public class ResumeUpdateForm {
 
+    private Long seqCode;
+
     @Size(max = 50)
     private String resumeGrbun;
 
@@ -24,4 +26,12 @@ public class ResumeUpdateForm {
     private LocalDateTime startDate;
 
     private LocalDateTime endDate;
+
+    private String regiId;
+
+    private LocalDateTime regiDate;
+
+    private String updtId;
+
+    private LocalDateTime updtDate;
 }

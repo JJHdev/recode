@@ -5,6 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ResumeSaveFormList {
+public class ResumeFormList {
+    private List<ResumeUpdateForm> resumeUpdateForms;
     private List<ResumeSaveForm> resumeSaveForms;
 }
