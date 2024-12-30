@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface ResumeRepository extends JpaRepository<Resume, Long> {
-    List<Resume> findByRegiId(String userId);
+    List<Resume> findByRegiId(String regiId);
 }

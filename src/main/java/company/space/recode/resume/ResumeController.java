@@ -29,6 +29,24 @@ public class ResumeController {
 
     @GetMapping("/viewResume.do")
     public String goResume(Model model, HttpServletRequest request) {
+        ResumeFormList resumeFormList = new ResumeFormList();
+        List<ResumeSaveForm> resumeSaveForms = new ArrayList<>();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof User) {
+                User userObject = (User) principal;
+                String userId = userObject.getUserId();
+                List<Resume> resumeList  = resumeService.findByRegiId(userId);
+                for(Resume resume : resumeList){
+                    resumeSaveForms.add(resumeToResumeSaveForm(resume));
+                }
+                resumeFormList.setResumeSaveForms(resumeSaveForms);
+            }
+        }
+        //List<ResumeSaveForm> saveForms = List.of(new ResumeSaveForm(), new ResumeSaveForm());
+        //resumeFormList.setResumeSaveForms(saveForms);
+        model.addAttribute("resumeFormList", resumeFormList);
         return "resume/viewResume";
     }
 
