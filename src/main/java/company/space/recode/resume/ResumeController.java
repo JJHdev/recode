@@ -61,6 +61,17 @@ public class ResumeController {
                 User userObject = (User) principal;
                 String userId = userObject.getUserId();
                 List<Resume> resumeList  = resumeService.findByRegiId(userId);
+
+                boolean hasExperience = resumeList.stream().anyMatch(resume -> "Experience".equals(resume.getResumeGrbun()));
+                boolean hasEducation = resumeList.stream().anyMatch(resume -> "Education".equals(resume.getResumeGrbun()));
+                boolean hasSkills = resumeList.stream().anyMatch(resume -> "Skill".equals(resume.getResumeGrbun()));
+                boolean hasLanguages =resumeList.stream().anyMatch(resume -> "Languages".equals(resume.getResumeGrbun()));
+
+                model.addAttribute("hasExperience", hasExperience);
+                model.addAttribute("hasEducation", hasEducation);
+                model.addAttribute("hasSkills", hasSkills);
+                model.addAttribute("hasLanguages", hasLanguages);
+
                 for(Resume resume : resumeList){
                     resumeSaveForms.add(resumeToResumeSaveForm(resume));
                 }

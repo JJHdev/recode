@@ -13,6 +13,11 @@
             <div class="row gx-5 justify-content-center">
                 <div class="col-lg-11 col-xl-9 col-xxl-8">
                     <form class="resumeForm" th:action="@{/regiResume.do}" method="post" enctype="multipart/form-data">
+                        [[${hasExperience}]]
+                        [[${hasEducation}]]
+                        [[${hasSkills}]]
+                        [[${hasLanguages}]]
+
                         <section th:each="resume, stat : ${resumeFormList.resumeSaveForms}">
                            <h3>Resume TEST [[${stat.index}+1]]</h3>
                             <div th:if="${'Experience'.equals(resume.resumeGrbun)}">
@@ -99,6 +104,8 @@
                                 </div>
                             </div>
                         </section>
+
+
                         <div class="pb-5"></div>
                         <!-- Skills Section-->
                         <section>
