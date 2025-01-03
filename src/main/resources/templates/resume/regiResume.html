@@ -11,25 +11,14 @@
                 <h1 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline">Resume</span></h1>
             </div>
             <div class="row gx-5 justify-content-center">
-                <div class="col-lg-11 col-xl-9 col-xxl-8">
+                <div class="col-lg-11 col-xl-9 col-xxl-12">
                     <form class="resumeForm" th:action="@{/regiResume.do}" method="post" enctype="multipart/form-data">
-                        [[${hasExperience}]]
-                        [[${hasEducation}]]
-                        [[${hasSkills}]]
-                        [[${hasLanguages}]]
 
-                        <section th:each="resume, stat : ${resumeFormList.resumeSaveForms}">
-                           <h3>Resume TEST [[${stat.index}+1]]</h3>
+                    <div th:each="resume, stat : ${resumeFormList.resumeSaveForms}">
+                        <section>
                             <div th:if="${'Experience'.equals(resume.resumeGrbun)}">
                                 <div class="d-flex align-items-center justify-content-between mb-4">
-                                    <h2 class="text-primary fw-bolder mb-0">
-                                        <select class="form-select" th:name="'resumeSaveForms[' + ${stat.index} + '].resumeGrbun'">
-                                            <option value="Experience" th:selected="${'Experience'.equals(resume.resumeGrbun)}">Experience</option>
-                                            <option value="Education" th:selected="${'Education'.equals(resume.resumeGrbun)}">Education</option>
-                                            <option value="Skills" th:selected="${'Skills'.equals(resume.resumeGrbun)}">Skills</option>
-                                            <option value="Languages" th:selected="${'Languages'.equals(resume.resumeGrbun)}">Languages</option>
-                                        </select>
-                                    </h2>
+                                    <h2 class="text-primary fw-bolder mb-0">[[${resume.resumeGrbun}]]</h2>
                                     <a class="btn btn-primary px-4 py-3" href="#!">
                                         <div class="d-inline-block bi bi-download me-2"></div> Download Resume
                                     </a>
@@ -39,41 +28,33 @@
                                         <div class="row align-items-center gx-5">
                                             <div class="col text-center text-lg-start mb-4 mb-lg-0">
                                                 <div class="bg-light p-4 rounded-4">
-                                                    <div class="text-primary fw-bolder mb-2">
-                                                        <input type="date" class="form-control d-inline w-auto me-2"
-                                                               th:name="'resumeSaveForms[' + ${stat.index} + '].startDate'"
-                                                               th:value="${resume.startDate}">
-                                                        ~
-                                                        <input type="date" class="form-control d-inline w-auto ms-2"
-                                                               th:name="'resumeSaveForms[' + ${stat.index} + '].endDate'"
-                                                               th:value="${resume.endDate}">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <div class="text-primary fw-bolder mb-3">
+                                                                <input type="date" class="form-control d-inline w-auto" th:name="'resumeSaveForms[' + ${stat.index} + '].startDate'" th:value="${resume.startDate}">
+                                                                ~
+                                                                <input type="date" class="form-control d-inline w-auto" th:name="'resumeSaveForms[' + ${stat.index} + '].endDate'" th:value="${resume.endDate}">
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <input type="text" class="form-control" th:name="'resumeSaveForms[' + ${stat.index} + '].title'" th:value="${resume.title}" placeholder="Enter Title">
+                                                            </div>
+                                                            <div>
+                                                                <textarea class="form-control" rows="2" th:name="'resumeSaveForms[' + ${stat.index} + '].subContent'" th:text="${resume.subContent}" placeholder="Enter Sub Content"></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <textarea class="form-control" rows="8" th:name="'resumeSaveForms[' + ${stat.index} + '].content'" th:text="${resume.content}" placeholder="Enter Content"></textarea>
+                                                        </div>
                                                     </div>
-                                                    <div class="small fw-bolder mb-2">
-                                                        <input type="text" class="form-control"
-                                                               th:name="'resumeSaveForms[' + ${stat.index} + '].title'"
-                                                               th:value="${resume.title}"
-                                                               placeholder="Enter Title">
-                                                    </div>
-                                                    <div class="small text-muted">
-                                                        <textarea class="form-control" rows="2"
-                                                                  th:name="'resumeSaveForms[' + ${stat.index} + '].subContent'"
-                                                                  th:text="${resume.subContent}"
-                                                                  placeholder="Enter Sub Content"></textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <div><textarea class="form-control" rows="6"
-                                                               th:name="'resumeSaveForms[' + ${stat.index} + '].content'"
-                                                               th:text="${resume.content}"
-                                                               placeholder="Enter Content"></textarea>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </section>
 
+                        <section>
                             <div th:if="${'Education'.equals(resume.resumeGrbun)}">
                                 <h2 class="text-secondary fw-bolder mb-4">[[${resume.resumeGrbun}]]</h2>
                                 <!-- Education Card 1-->
@@ -85,8 +66,8 @@
                                                     <div class="text-secondary fw-bolder mb-2">
                                                         <span th:if="${resume.startDate == null && resume.endDate == null}">날짜 미정</span>
                                                         <span th:unless="${resume.startDate == null && resume.endDate == null}">
-                                                            [[${resume.startDate} ?: '' ]] - [[${resume.endDate} ?: '' ]]
-                                                        </span>
+                                                        [[${resume.startDate} ?: '' ]] - [[${resume.endDate} ?: '' ]]
+                                                    </span>
                                                     </div>
                                                     <div class="mb-2">
                                                         <div class="small fw-bolder">[[${resume.title} ?: '' ]]</div>
@@ -105,9 +86,6 @@
                             </div>
                         </section>
 
-
-                        <div class="pb-5"></div>
-                        <!-- Skills Section-->
                         <section>
                             <div class="card shadow border-0 rounded-4 mb-5">
                                 <div class="card-body p-5">
@@ -137,9 +115,37 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="card shadow border-0 rounded-4 mb-5">
+                                <div class="card-body p-5">
+                                    <!-- Professional skills list-->
+                                    <div class="mb-0">
+                                        <div class="d-flex align-items-center mb-4">
+                                            <div class="feature bg-primary bg-gradient-primary-to-secondary text-white rounded-3 me-3">
+                                                <i class="bi bi-tools"></i>
+                                            </div>
+                                            <h3 class="fw-bolder mb-0"><span class="text-gradient d-inline">Languages</span></h3>
+                                        </div>
+                                        <!-- Skills 항목 필터 -->
+                                        <div th:each="resume, stat : ${resumeFormList.resumeSaveForms}" th:if="${'Languages'.equals(resume.resumeGrbun)}">
+                                            <!-- 데이터를 3개씩 나누기 -->
+                                            <div th:each="chunk : ${#lists.partition(resume.items, 3)}">
+                                                <div class="row row-cols-1 row-cols-md-3 g-4">
+                                                    <!-- 그룹 내 각 항목 반복 -->
+                                                    <div th:each="item, indexStat : ${chunk}"
+                                                         th:classappend="${indexStat.index == 2 ? 'col' : 'col mb-4 mb-md-0'}">
+                                                        <div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">
+                                                            [[${item.content}]]
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </section>
                     </form>
-                </div>
             </div>
         </div>
     </body>

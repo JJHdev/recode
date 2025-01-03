@@ -67,10 +67,29 @@ public class ResumeController {
                 boolean hasSkills = resumeList.stream().anyMatch(resume -> "Skill".equals(resume.getResumeGrbun()));
                 boolean hasLanguages =resumeList.stream().anyMatch(resume -> "Languages".equals(resume.getResumeGrbun()));
 
-                model.addAttribute("hasExperience", hasExperience);
-                model.addAttribute("hasEducation", hasEducation);
-                model.addAttribute("hasSkills", hasSkills);
-                model.addAttribute("hasLanguages", hasLanguages);
+                if (!hasExperience) {
+                    Resume emptyExperience = new Resume();
+                    emptyExperience.setResumeGrbun("Experience");
+                    resumeList.add(emptyExperience);
+                }
+
+                if (!hasEducation) {
+                    Resume emptyEducation = new Resume();
+                    emptyEducation.setResumeGrbun("Education");
+                    resumeList.add(emptyEducation);
+                }
+
+                if (!hasSkills) {
+                    Resume emptySkills = new Resume();
+                    emptySkills.setResumeGrbun("Skill");
+                    resumeList.add(emptySkills);
+                }
+
+                if (!hasLanguages) {
+                    Resume emptyLanguages = new Resume();
+                    emptyLanguages.setResumeGrbun("Languages");
+                    resumeList.add(emptyLanguages);
+                }
 
                 for(Resume resume : resumeList){
                     resumeSaveForms.add(resumeToResumeSaveForm(resume));
