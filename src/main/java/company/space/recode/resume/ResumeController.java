@@ -64,7 +64,7 @@ public class ResumeController {
 
                 boolean hasExperience = resumeList.stream().anyMatch(resume -> "Experience".equals(resume.getResumeGrbun()));
                 boolean hasEducation = resumeList.stream().anyMatch(resume -> "Education".equals(resume.getResumeGrbun()));
-                boolean hasSkills = resumeList.stream().anyMatch(resume -> "Skill".equals(resume.getResumeGrbun()));
+                boolean hasSkills = resumeList.stream().anyMatch(resume -> "Skills".equals(resume.getResumeGrbun()));
                 boolean hasLanguages =resumeList.stream().anyMatch(resume -> "Languages".equals(resume.getResumeGrbun()));
 
                 if (!hasExperience) {
@@ -81,8 +81,11 @@ public class ResumeController {
 
                 if (!hasSkills) {
                     Resume emptySkills = new Resume();
-                    emptySkills.setResumeGrbun("Skill");
+                    emptySkills.setResumeGrbun("Skills");
                     resumeList.add(emptySkills);
+                    Resume emptySkills2 = new Resume();
+                    emptySkills2.setResumeGrbun("Skills");
+                    resumeList.add(emptySkills2);
                 }
 
                 if (!hasLanguages) {
