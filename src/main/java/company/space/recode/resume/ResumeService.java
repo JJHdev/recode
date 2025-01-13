@@ -18,15 +18,31 @@ import java.util.List;
 @Service
 public class ResumeService {
 
-    private final ResumeRepository resumeRepository;
+    private final ResumeExperienceRepository resumeExperienceRepository;
+    private final ResumeEducationRepository resumeEducationRepository;
+    private final ResumeSkillRepository resumeSkillRepository;
+    private final ResumeLanguagesRepository resumeLanguagesRepository;
 
     @Autowired
-    public ResumeService(ResumeRepository resumeRepository) {
-        this.resumeRepository = resumeRepository;
+    public ResumeService(ResumeExperienceRepository resumeExperienceRepository, ResumeEducationRepository resumeEducationRepository
+                        ,ResumeSkillRepository resumeSkillRepository, ResumeLanguagesRepository resumeLanguagesRepository) {
+        this.resumeExperienceRepository = resumeExperienceRepository;
+        this.resumeEducationRepository = resumeEducationRepository;
+        this.resumeSkillRepository = resumeSkillRepository;
+        this.resumeLanguagesRepository = resumeLanguagesRepository;
     }
 
-    public List<Resume> findByRegiId (String regiId){
-        return resumeRepository.findByRegiId(regiId);
+    public List<Experience> findExperiencesByRegiId (String regiId){
+        return resumeExperienceRepository.findByRegiId(regiId);
+    }
+    public List<Education> findEducationsByRegiId (String regiId){
+        return resumeEducationRepository.findByRegiId(regiId);
+    }
+    public List<Skill> findSkillsByRegiId (String regiId){
+        return resumeSkillRepository.findByRegiId(regiId);
+    }
+    public List<Languages> findLanguagesByRegiId (String regiId){
+        return resumeLanguagesRepository.findByRegiId(regiId);
     }
 
 }

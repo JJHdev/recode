@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.ArrayList;
@@ -29,77 +30,51 @@ public class ResumeController {
 
     @GetMapping("/viewResume.do")
     public String goResume(Model model, HttpServletRequest request) {
-        ResumeFormList resumeFormList = new ResumeFormList();
-        List<ResumeSaveForm> resumeSaveForms = new ArrayList<>();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         if (authentication != null && authentication.isAuthenticated()) {
             Object principal = authentication.getPrincipal();
             if (principal instanceof User) {
-                User userObject = (User) principal;
-                String userId = userObject.getUserId();
-                List<Resume> resumeList  = resumeService.findByRegiId(userId);
-                for(Resume resume : resumeList){
-                    resumeSaveForms.add(resumeToResumeSaveForm(resume));
-                }
-                resumeFormList.setResumeSaveForms(resumeSaveForms);
+                User user = (User) principal;
+                String userId = user.getUserId();
+
+                // 각 리스트를 서비스에서 가져와 모델에 추가
+                List<Experience> experiencesList = resumeService.findExperiencesByRegiId(userId);
+                List<Education> educationList = resumeService.findEducationsByRegiId(userId);
+                List<Skill> skillList = resumeService.findSkillsByRegiId(userId);
+                List<Languages> languagesList = resumeService.findLanguagesByRegiId(userId);
+
+                model.addAttribute("experiencesList", experiencesList);
+                model.addAttribute("educationList", educationList);
+                model.addAttribute("skillList", skillList);
+                model.addAttribute("languagesList", languagesList);
             }
         }
-        //List<ResumeSaveForm> saveForms = List.of(new ResumeSaveForm(), new ResumeSaveForm());
-        //resumeFormList.setResumeSaveForms(saveForms);
-        model.addAttribute("resumeFormList", resumeFormList);
+
         return "resume/viewResume";
     }
 
     @GetMapping("/regiResume.do")
-    public String regiResume(Model model, HttpServletRequest request) {
-        ResumeFormList resumeFormList = new ResumeFormList();
-        List<ResumeSaveForm> resumeSaveForms = new ArrayList<>();
+    public String regiResume(Model model, @ModelAttribute ResumeFormList resumeFormList, HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             Object principal = authentication.getPrincipal();
             if (principal instanceof User) {
+
                 User userObject = (User) principal;
                 String userId = userObject.getUserId();
-                List<Resume> resumeList  = resumeService.findByRegiId(userId);
+                List<Experience> experiencesList  = resumeService.findExperiencesByRegiId(userId);
+                List<Education> educationList  = resumeService.findEducationsByRegiId(userId);
+                List<Skill> skillList  = resumeService.findSkillsByRegiId(userId);
+                List<Languages> languagesList  = resumeService.findLanguagesByRegiId(userId);
 
-                boolean hasExperience = resumeList.stream().anyMatch(resume -> "Experience".equals(resume.getResumeGrbun()));
-                boolean hasEducation = resumeList.stream().anyMatch(resume -> "Education".equals(resume.getResumeGrbun()));
-                boolean hasSkills = resumeList.stream().anyMatch(resume -> "Skills".equals(resume.getResumeGrbun()));
-                boolean hasLanguages =resumeList.stream().anyMatch(resume -> "Languages".equals(resume.getResumeGrbun()));
-
-                if (!hasExperience) {
-                    Resume emptyExperience = new Resume();
-                    emptyExperience.setResumeGrbun("Experience");
-                    resumeList.add(emptyExperience);
-                }
-
-                if (!hasEducation) {
-                    Resume emptyEducation = new Resume();
-                    emptyEducation.setResumeGrbun("Education");
-                    resumeList.add(emptyEducation);
-                }
-
-                if (!hasSkills) {
-                    Resume emptySkills = new Resume();
-                    emptySkills.setResumeGrbun("Skills");
-                    resumeList.add(emptySkills);
-                    Resume emptySkills2 = new Resume();
-                    emptySkills2.setResumeGrbun("Skills");
-                    resumeList.add(emptySkills2);
-                }
-
-                if (!hasLanguages) {
-                    Resume emptyLanguages = new Resume();
-                    emptyLanguages.setResumeGrbun("Languages");
-                    resumeList.add(emptyLanguages);
-                }
-
-                for(Resume resume : resumeList){
-                    resumeSaveForms.add(resumeToResumeSaveForm(resume));
-                }
-                resumeFormList.setResumeSaveForms(resumeSaveForms);
+                resumeFormList.setExperiencesList(experiencesList);
+                resumeFormList.setEducationList(educationList);
+                resumeFormList.setSkillList(skillList);
+                resumeFormList.setLanguagesList(languagesList);
             }
         }
+
         //List<ResumeSaveForm> saveForms = List.of(new ResumeSaveForm(), new ResumeSaveForm());
         //resumeFormList.setResumeSaveForms(saveForms);
         model.addAttribute("resumeFormList", resumeFormList);
@@ -107,24 +82,21 @@ public class ResumeController {
     }
 
     @PostMapping("/regiResume.do")
-    public String insertResume(Model model, HttpServletRequest request) {
-        model.addAttribute("resume", new ResumeSaveForm());
-        return "resume/regiResume";
+    public String registerResume(@ModelAttribute ResumeFormList resumeFormList) {
+        // resumeFormList 객체는 클라이언트로부터 전달된 데이터를 바인딩
+        for (Experience experience : resumeFormList.getExperiencesList()) {
+            System.out.println(experience);
+        }
+        for (Education education : resumeFormList.getEducationList()) {
+            System.out.println(education);
+        }
+        for (Skill skill : resumeFormList.getSkillList()) {
+            System.out.println(skill);
+        }
+        for (Languages languages : resumeFormList.getLanguagesList()) {
+            System.out.println(languages);
+        }
+        return "redirect:/resume"; // 처리 후 리다이렉트
     }
 
-    public ResumeSaveForm resumeToResumeSaveForm(Resume resume) {
-        ResumeSaveForm saveForm = new ResumeSaveForm();
-        saveForm.setSeqCode(resume.getSeqCode());
-        saveForm.setResumeGrbun(resume.getResumeGrbun());
-        saveForm.setTitle(resume.getTitle());
-        saveForm.setSubContent(resume.getSubContent());
-        saveForm.setContent(resume.getContent());
-        saveForm.setStartDate(resume.getStartDate());
-        saveForm.setEndDate(resume.getEndDate());
-        saveForm.setRegiId(resume.getRegiId());
-        saveForm.setRegiDate(resume.getRegiDate());
-        saveForm.setUpdtId(resume.getUpdtId());
-        saveForm.setUpdtDate(resume.getUpdtDate());
-        return saveForm;
-    }
 }

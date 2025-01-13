@@ -1,11 +1,18 @@
 package company.space.recode.resume;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
 public class ResumeFormList {
-    private List<ResumeUpdateForm> resumeUpdateForms;
-    private List<ResumeSaveForm> resumeSaveForms;
+
+    private List<Experience> experiencesList;
+    private List<Education> educationList;
+    private List<Skill> skillList;
+    private List<Languages> languagesList;
+
 }
