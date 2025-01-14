@@ -15,4 +15,9 @@ public class ResumeFormList {
     private List<Skill> skillList;
     private List<Languages> languagesList;
 
+    private List<String> delExperiencesCode;
+    private List<String> delEducationCode;
+    private List<String> delSkillCode;
+    private List<String> delLanguagesCode;
+
 }

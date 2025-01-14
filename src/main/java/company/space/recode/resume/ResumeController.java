@@ -84,19 +84,107 @@ public class ResumeController {
     @PostMapping("/regiResume.do")
     public String registerResume(@ModelAttribute ResumeFormList resumeFormList) {
         // resumeFormList 객체는 클라이언트로부터 전달된 데이터를 바인딩
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        User userObject = (User) principal;
+        String userId = userObject.getUserId();
+
         for (Experience experience : resumeFormList.getExperiencesList()) {
-            System.out.println(experience);
+            if(!experience.getTitle().isEmpty()){
+                experience.setRegiId(userId);
+                resumeService.experienceRegi(experience);
+            }
         }
         for (Education education : resumeFormList.getEducationList()) {
-            System.out.println(education);
+            if(!education.getTitle().isEmpty()){
+                education.setRegiId(userId);
+                resumeService.educationRegi(education);
+            }
         }
         for (Skill skill : resumeFormList.getSkillList()) {
-            System.out.println(skill);
+            if(!skill.getTitle().isEmpty()){
+                skill.setRegiId(userId);
+                resumeService.skillRegi(skill);
+            }
         }
         for (Languages languages : resumeFormList.getLanguagesList()) {
-            System.out.println(languages);
+            if(!languages.getTitle().isEmpty()){
+                languages.setRegiId(userId);
+                resumeService.languagesRegi(languages);
+            }
         }
-        return "redirect:/resume"; // 처리 후 리다이렉트
+
+        // 경험 삭제 처리
+        if (resumeFormList.getDelExperiencesCode() != null) {
+            for (String seqCode : resumeFormList.getDelExperiencesCode()) {
+                Experience experience = new Experience();
+
+                try {
+                    Long seqCodeLong = Long.valueOf(seqCode); // String -> Long 변환
+                    experience.setSeqCode(seqCodeLong);
+                } catch (NumberFormatException e) {
+                    // seqCode가 숫자가 아닐 경우 처리
+                    throw new IllegalArgumentException("Invalid seqCode: " + seqCode, e);
+                }
+
+                resumeService.deleteExperience(experience);
+            }
+        }
+
+        // 교육 삭제 처리
+        if (resumeFormList.getDelEducationCode() != null) {
+            for (String seqCode : resumeFormList.getDelEducationCode()) {
+                Education education = new Education();
+
+                try {
+                    Long seqCodeLong = Long.valueOf(seqCode); // String -> Long 변환
+                    education.setSeqCode(seqCodeLong);
+                } catch (NumberFormatException e) {
+                    // seqCode가 숫자가 아닐 경우 처리
+                    throw new IllegalArgumentException("Invalid seqCode: " + seqCode, e);
+                }
+
+                resumeService.deleteEducation(education);
+            }
+        }
+
+        // 스킬 삭제 처리
+        if (resumeFormList.getDelSkillCode() != null) {
+            for (String seqCode : resumeFormList.getDelSkillCode()) {
+
+                Skill skill = new Skill();
+
+                try {
+                    Long seqCodeLong = Long.valueOf(seqCode); // String -> Long 변환
+                    skill.setSeqCode(seqCodeLong);
+                } catch (NumberFormatException e) {
+                    // seqCode가 숫자가 아닐 경우 처리
+                    throw new IllegalArgumentException("Invalid seqCode: " + seqCode, e);
+                }
+
+                resumeService.deleteSkill(skill);
+            }
+        }
+
+        // 언어 삭제 처리
+        if (resumeFormList.getDelLanguagesCode() != null) {
+            for (String seqCode : resumeFormList.getDelLanguagesCode()) {
+
+                Languages languages = new Languages();
+
+                try {
+                    Long seqCodeLong = Long.valueOf(seqCode); // String -> Long 변환
+                    languages.setSeqCode(seqCodeLong);
+                } catch (NumberFormatException e) {
+                    // seqCode가 숫자가 아닐 경우 처리
+                    throw new IllegalArgumentException("Invalid seqCode: " + seqCode, e);
+                }
+
+                resumeService.deleteLanguages(languages);
+            }
+        }
+
+        return "redirect:/regiResume.do"; // 처리 후 리다이렉트
     }
 
 }
