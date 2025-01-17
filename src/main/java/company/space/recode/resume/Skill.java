@@ -16,7 +16,7 @@ public class Skill {
     @Column(name = "SEQ_CODE")
     private Long seqCode;
 
-    @Column(name = "TITLE", nullable = false)
+    @Column(name = "TITLE")
     private String title;
 
     @Column(name = "REGI_ID", updatable = false)

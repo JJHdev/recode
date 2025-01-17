@@ -12,102 +12,90 @@
             </div>
             <div class="row gx-5 justify-content-center">
                 <div class="col-lg-11 col-xl-9 col-xxl-8">
-                    <form class="resumeForm" th:action="@{/regiResume.do}" method="post" enctype="multipart/form-data">
-                        <section th:each="resume, stat : ${resumeFormList.resumeSaveForms}">
-                            <h3>Resume TEST [[${stat.index}+1]]</h3>
-                            <div th:if="${'Experience'.equals(resume.resumeGrbun)}">
-                                <div class="d-flex align-items-center justify-content-between mb-4">
-                                    <h2 class="text-primary fw-bolder mb-0">[[${resume.resumeGrbun}]]</h2>
-                                    <a class="btn btn-primary px-4 py-3" href="#!">
-                                        <div class="d-inline-block bi bi-download me-2"></div> Download Resume
-                                    </a>
-                                </div>
-                                <div class="card shadow border-0 rounded-4 mb-5">
-                                    <div class="card-body p-5">
-                                        <div class="row align-items-center gx-5">
-                                            <div class="col text-center text-lg-start mb-4 mb-lg-0">
-                                                <div class="bg-light p-4 rounded-4">
-                                                    <div class="text-primary fw-bolder mb-2">
-                                                        <span th:if="${resume.startDate == null && resume.endDate == null}">날짜 미정</span>
-                                                        <span th:unless="${resume.startDate == null && resume.endDate == null}">
-                                                                [[${resume.startDate} ?: '' ]] - [[${resume.endDate} ?: '' ]]
-                                                            </span>
-                                                    </div>
-                                                    <div class="small fw-bolder">[[${resume.title} ?: '' ]]</div>
-                                                    <div class="small text-muted">[[${resume.subContent} ?: '' ]]</div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <div>[[${resume.content} ?: '' ]]</div>
-                                            </div>
+                    <section>
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <h2 class="fw-bold">Experience</h2>
+                        </div>
+                        <div class="card shadow border-0 rounded-4 mb-5" th:if="${not #lists.isEmpty(experiencesList)}">
+                            <div class="card-body p-5" th:each="experience : ${experiencesList}">
+                                <div class="row align-items-center gx-5">
+                                    <div class="col text-center text-lg-start mb-4 mb-lg-0">
+                                        <div class="bg-light p-4 rounded-4">
+                                            <div class="text-primary fw-bolder mb-2"  th:text="(${experience.startDate} ?: '시작날짜') + ' - ' + (${experience.endDate} ?: '종료날짜')"></div>
+                                            <div class="small fw-bolder" th:text="${experience.title} ?: '제목'"></div>
+                                            <div class="small text-muted" th:text="${experience.subContent} ?: '부제'"></div>
                                         </div>
+                                    </div>
+                                    <div class="col-lg-8"><div th:text="${experience.content} ?: '내용'"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alert alert-secondary" th:unless="${not #lists.isEmpty(experiencesList)}">
+                            No experience data found.
+                        </div>
+                    </section>
+                    <section>
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <h2 class="fw-bold">Experience</h2>
+                        </div>
+                        <div class="card shadow border-0 rounded-4 mb-5" th:if="${not #lists.isEmpty(educationList)}">
+                            <div class="card-body p-5" th:each="education : ${educationList}">
+                                <div class="row align-items-center gx-5">
+                                    <div class="col text-center text-lg-start mb-4 mb-lg-0">
+                                        <div class="bg-light p-4 rounded-4">
+                                            <div class="text-primary fw-bolder mb-2"  th:text="(${education.startDate} ?: '시작날짜') + ' - ' + (${education.endDate} ?: '종료날짜')"></div>
+                                            <div class="small fw-bolder" th:text="${education.title} ?: '제목'"></div>
+                                            <div class="small text-muted" th:text="${education.subContent} ?: '부제'"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-8"><div th:text="${education.content} ?: '내용'"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alert alert-secondary" th:unless="${not #lists.isEmpty(educationList)}">
+                            No education data found.
+                        </div>
+                    </section>
+                    <div class="pb-5"></div>
+                    <section>
+                        <div class="card shadow border-0 rounded-4 mb-5">
+                            <div class="card-body p-5">
+                                <div class="mb-5">
+                                    <div class="d-flex align-items-center mb-4">
+                                        <div class="feature bg-primary bg-gradient-primary-to-secondary text-white rounded-3 me-3"><i class="bi bi-tools"></i></div>
+                                        <h3 class="fw-bolder mb-0"><span class="text-gradient d-inline">Professional Skills</span></h3>
+                                    </div>
+                                    <div class="row row-cols-1 row-cols-md-3 mb-4">
+                                        <div class="col mb-4 mb-md-0"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">SEO/SEM Marketing</div></div>
+                                        <div class="col mb-4 mb-md-0"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">Statistical Analysis</div></div>
+                                        <div class="col"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">Web Development</div></div>
+                                    </div>
+                                    <div class="row row-cols-1 row-cols-md-3">
+                                        <div class="col mb-4 mb-md-0"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">Network Security</div></div>
+                                        <div class="col mb-4 mb-md-0"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">Adobe Software Suite</div></div>
+                                        <div class="col"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">User Interface Design</div></div>
+                                    </div>
+                                </div>
+                                <!-- Languages list-->
+                                <div class="mb-0">
+                                    <div class="d-flex align-items-center mb-4">
+                                        <div class="feature bg-primary bg-gradient-primary-to-secondary text-white rounded-3 me-3"><i class="bi bi-code-slash"></i></div>
+                                        <h3 class="fw-bolder mb-0"><span class="text-gradient d-inline">Languages</span></h3>
+                                    </div>
+                                    <div class="row row-cols-1 row-cols-md-3 mb-4">
+                                        <div class="col mb-4 mb-md-0"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">HTML</div></div>
+                                        <div class="col mb-4 mb-md-0"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">CSS</div></div>
+                                        <div class="col"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">JavaScript</div></div>
+                                    </div>
+                                    <div class="row row-cols-1 row-cols-md-3">
+                                        <div class="col mb-4 mb-md-0"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">Python</div></div>
+                                        <div class="col mb-4 mb-md-0"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">Ruby</div></div>
+                                        <div class="col"><div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">Node.js</div></div>
                                     </div>
                                 </div>
                             </div>
-
-                            <div th:if="${'Education'.equals(resume.resumeGrbun)}">
-                                <h2 class="text-secondary fw-bolder mb-4">[[${resume.resumeGrbun}]]</h2>
-                                <!-- Education Card 1-->
-                                <div class="card shadow border-0 rounded-4 mb-5">
-                                    <div class="card-body p-5">
-                                        <div class="row align-items-center gx-5">
-                                            <div class="col text-center text-lg-start mb-4 mb-lg-0">
-                                                <div class="bg-light p-4 rounded-4">
-                                                    <div class="text-secondary fw-bolder mb-2">
-                                                        <span th:if="${resume.startDate == null && resume.endDate == null}">날짜 미정</span>
-                                                        <span th:unless="${resume.startDate == null && resume.endDate == null}">
-                                                            [[${resume.startDate} ?: '' ]] - [[${resume.endDate} ?: '' ]]
-                                                        </span>
-                                                    </div>
-                                                    <div class="mb-2">
-                                                        <div class="small fw-bolder">[[${resume.title} ?: '' ]]</div>
-                                                    </div>
-                                                    <div class="fst-italic">
-                                                        <div class="small text-muted">[[${resume.subContent} ?: '' ]]</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <div>[[${resume.content} ?: '' ]]</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                        <div class="pb-5"></div>
-                        <!-- Skills Section-->
-                        <section>
-                            <div class="card shadow border-0 rounded-4 mb-5">
-                                <div class="card-body p-5">
-                                    <!-- Professional skills list-->
-                                    <div class="mb-5">
-                                        <div class="d-flex align-items-center mb-4">
-                                            <div class="feature bg-primary bg-gradient-primary-to-secondary text-white rounded-3 me-3">
-                                                <i class="bi bi-tools"></i>
-                                            </div>
-                                            <h3 class="fw-bolder mb-0"><span class="text-gradient d-inline">Professional Skills</span></h3>
-                                        </div>
-                                        <!-- Skills 항목 필터 -->
-                                        <div th:each="resume, stat : ${resumeFormList.resumeSaveForms}" th:if="${'Skills'.equals(resume.resumeGrbun)}">
-                                            <!-- 데이터를 3개씩 나누기 -->
-                                            <div th:each="chunk : ${#lists.partition(resume.items, 3)}">
-                                                <div class="row row-cols-1 row-cols-md-3 g-4">
-                                                    <!-- 그룹 내 각 항목 반복 -->
-                                                    <div th:each="item, indexStat : ${chunk}"
-                                                         th:classappend="${indexStat.index == 2 ? 'col' : 'col mb-4 mb-md-0'}">
-                                                        <div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">
-                                                            [[${item.content}]]
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                    </form>
+                        </div>
+                    </section>
                 </div>
             </div>
         </div>

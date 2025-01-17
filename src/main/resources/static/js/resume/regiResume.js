@@ -1,9 +1,15 @@
-$(document).ready(function(){
-   // $('#resumeButton').on('click', function (event) {
-     //   event.preventDefault(); // 기본 동작(페이지 이동) 방지
-      //  authAnchor('/nextPage'); // authAnchor 호출
+$(document).ready(function () {
+    // $('#resumeButton').on('click', function (event) {
+    //   event.preventDefault(); // 기본 동작(페이지 이동) 방지
+    //  authAnchor('/nextPage'); // authAnchor 호출
     //});
 });
+
+const delExperienceCodes = [];
+const delEducationCode = [];
+const delSkillCode = [];
+const delLanguagesCode = [];
+
 
 function onClickButton(buttonId) {
     switch (buttonId) {
@@ -34,10 +40,17 @@ function onClickButton(buttonId) {
         default:
             console.log("Unknown button ID:", buttonId);
             break;
-   }
+    }
 }
 
-function addExperiences(){
+function onClickDelButton(buttonId){
+    switch (buttonid) {
+        case "delExperiencesBtn":
+
+    }
+}
+
+function addExperiences() {
     const container = document.querySelector('.experience-container');
     const index = container.querySelectorAll('.experience-form').length;
     const newHTML = `
@@ -76,24 +89,26 @@ function addExperiences(){
     container.insertAdjacentHTML('beforeend', newHTML);
 }
 
-function delExperiences(){
+function delExperiences() {
     const container = document.querySelector('.experience-container');
     const forms = container.querySelectorAll('.experience-form');
-
-    if(forms.length <= 1){
-        return false;
-    }
-
     const lastForm = forms[forms.length - 1];
-
     if (lastForm) {
+        const hiddenInput = lastForm.querySelector('input[type="hidden"][name*=".seqCode"]');
+        if (hiddenInput && hiddenInput.value) {
+            delExperienceCodes.push(hiddenInput.value);
+            const delInput = document.getElementById('delExperiencesCode');
+            if (delInput) {
+                delInput.value = delExperienceCodes.join(',');
+            }
+        }
         lastForm.remove();
     } else {
         console.warn('No experience form to delete.');
     }
 }
 
-function addEducation(){
+function addEducation() {
     const container = document.querySelector('.education-container');
     const index = container.querySelectorAll('.education-form').length;
     const newHTML = `
@@ -131,21 +146,27 @@ function addEducation(){
     // 새로운 Form 추가
     container.insertAdjacentHTML('beforeend', newHTML);
 }
-function delEducation(){
+
+function delEducation() {
     const container = document.querySelector('.education-container');
     const forms = container.querySelectorAll('.education-form');
-    if(forms.length <= 1){
-        return false;
-    }
     const lastForm = forms[forms.length - 1];
     if (lastForm) {
+        const hiddenInput = lastForm.querySelector('input[type="hidden"][name*=".seqCode"]');
+        if (hiddenInput && hiddenInput.value) {
+            delEducationCode.push(hiddenInput.value);
+            const delInput = document.getElementById('delEducationCode');
+            if (delInput) {
+                delInput.value = delEducationCode.join(',');
+            }
+        }
         lastForm.remove();
     } else {
         console.warn('No experience form to delete.');
     }
 }
 
-function addSkill(){
+function addSkill() {
     const container = document.querySelector('.skill-container');
     const index = container.querySelectorAll('.skill-form').length;
     const newHTML = `
@@ -160,21 +181,27 @@ function addSkill(){
     // 새로운 Form 추가
     container.insertAdjacentHTML('beforeend', newHTML);
 }
-function delSkill(){
+
+function delSkill() {
     const container = document.querySelector('.skill-container');
     const forms = container.querySelectorAll('.skill-form');
-    if(forms.length <= 1){
-        return false;
-    }
     const lastForm = forms[forms.length - 1];
     if (lastForm) {
+        const hiddenInput = lastForm.querySelector('input[type="hidden"][name*=".seqCode"]');
+        if (hiddenInput && hiddenInput.value) {
+            delSkillCode.push(hiddenInput.value);
+            const delInput = document.getElementById('delSkillCode');
+            if (delInput) {
+                delInput.value = delSkillCode.join(',');
+            }
+        }
         lastForm.remove();
     } else {
         console.warn('No experience form to delete.');
     }
 }
 
-function addLanguages(){
+function addLanguages() {
     const container = document.querySelector('.languages-container');
     const index = container.querySelectorAll('.languages-form').length;
     const newHTML = `
@@ -189,18 +216,22 @@ function addLanguages(){
     // 새로운 Form 추가
     container.insertAdjacentHTML('beforeend', newHTML);
 }
-function delLanguages(){
+
+function delLanguages() {
     const container = document.querySelector('.languages-container');
     const forms = container.querySelectorAll('.languages-form');
-    if(forms.length <= 1){
-        return false;
-    }
     const lastForm = forms[forms.length - 1];
     if (lastForm) {
+        const hiddenInput = lastForm.querySelector('input[type="hidden"][name*=".seqCode"]');
+        if (hiddenInput && hiddenInput.value) {
+            delLanguagesCode.push(hiddenInput.value);
+            const delInput = document.getElementById('delLanguagesCode');
+            if (delInput) {
+                delInput.value = delLanguagesCode.join(',');
+            }
+        }
         lastForm.remove();
     } else {
         console.warn('No experience form to delete.');
     }
 }
-
-

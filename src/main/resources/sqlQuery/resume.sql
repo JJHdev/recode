@@ -1,6 +1,6 @@
 CREATE TABLE EXPERIENCE (
         SEQ_CODE      NUMBER(10)        PRIMARY KEY, -- 시퀀스 코드
-        TITLE         VARCHAR2(200)     NOT NULL,    -- 제목
+        TITLE         VARCHAR2(200),    -- 제목
         SUB_CONTENT   VARCHAR2(500),                -- 간략내용
         CONTENT       CLOB,                         -- 내용
         START_DATE    DATE,                         -- 시작기간
@@ -18,7 +18,7 @@ CREATE SEQUENCE experience_key_seq
 
 CREATE TABLE EDUCATION (
     SEQ_CODE      NUMBER(10)        PRIMARY KEY, -- 시퀀스 코드
-    TITLE         VARCHAR2(200)     NOT NULL,    -- 제목
+    TITLE         VARCHAR2(200),    -- 제목
     SUB_CONTENT   VARCHAR2(500),                -- 간략내용
     CONTENT       CLOB,                         -- 내용
     START_DATE    DATE,                         -- 시작기간
@@ -36,7 +36,7 @@ CREATE SEQUENCE education_key_seq
 
 CREATE TABLE SKILL (
     SEQ_CODE      NUMBER(10)        PRIMARY KEY, -- 시퀀스 코드
-    TITLE         VARCHAR2(200)     NOT NULL,    -- 제목
+    TITLE         VARCHAR2(200) ,    -- 제목
     REGI_ID     VARCHAR2(50)      NOT NULL,    -- 등록자
     REGI_DATE     DATE             DEFAULT SYSDATE, -- 등록일
     UPDT_ID     VARCHAR2(50),                -- 수정자
@@ -50,7 +50,7 @@ CREATE SEQUENCE skill_key_seq
 
 CREATE TABLE LANGUAGES (
    SEQ_CODE      NUMBER(10)        PRIMARY KEY, -- 시퀀스 코드
-   TITLE         VARCHAR2(200)     NOT NULL,    -- 제목
+   TITLE         VARCHAR2(200),    -- 제목
    REGI_ID     VARCHAR2(50)      NOT NULL,    -- 등록자
    REGI_DATE     DATE             DEFAULT SYSDATE, -- 등록일
    UPDT_ID     VARCHAR2(50),                -- 수정자

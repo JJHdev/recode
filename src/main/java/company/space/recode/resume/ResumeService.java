@@ -5,6 +5,7 @@ import company.space.recode.user.UserSaveForm;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -34,16 +35,16 @@ public class ResumeService {
     }
 
     public List<Experience> findExperiencesByRegiId (String regiId){
-        return resumeExperienceRepository.findByRegiId(regiId);
+        return resumeExperienceRepository.findByRegiId(regiId, Sort.by(Sort.Direction.ASC, "seqCode"));
     }
     public List<Education> findEducationsByRegiId (String regiId){
-        return resumeEducationRepository.findByRegiId(regiId);
+        return resumeEducationRepository.findByRegiId(regiId, Sort.by(Sort.Direction.ASC, "seqCode"));
     }
     public List<Skill> findSkillsByRegiId (String regiId){
-        return resumeSkillRepository.findByRegiId(regiId);
+        return resumeSkillRepository.findByRegiId(regiId, Sort.by(Sort.Direction.ASC, "seqCode"));
     }
     public List<Languages> findLanguagesByRegiId (String regiId){
-        return resumeLanguagesRepository.findByRegiId(regiId);
+        return resumeLanguagesRepository.findByRegiId(regiId, Sort.by(Sort.Direction.ASC, "seqCode"));
     }
 
     public Experience experienceRegi(Experience experience){
