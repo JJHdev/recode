@@ -204,8 +204,9 @@ function delSkill() {
 function addLanguages() {
     const container = document.querySelector('.languages-container');
     const index = container.querySelectorAll('.languages-form').length;
+    console.log(index);
     const newHTML = `
-    <div class="languagesList-form" >
+    <div class="languages-form" >
         <div class="row mb-4 mb-md-1">
             <div class="d-flex align-items-center bg-light rounded-4 p-3 h-100">
                 <input type="text" class="form-control" name="languagesList[${index}].title" value="" placeholder="Enter Title" />
