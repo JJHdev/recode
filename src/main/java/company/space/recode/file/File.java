@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "FILE")
+@Table(name = "FILE_TABLE")
 @Data
 public class File {
     @Id

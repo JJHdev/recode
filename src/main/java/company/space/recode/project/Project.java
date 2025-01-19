@@ -2,15 +2,14 @@ package company.space.recode.project;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.ToString;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "PROEJCT")
+@Table(name = "PROJECT")
 @Data
-public class Proejct {
+public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "project_key_generator")
     @SequenceGenerator(name = "project_key_generator", sequenceName = "project_key_seq", allocationSize = 1)
@@ -29,8 +28,6 @@ public class Proejct {
     @Column(name = "END_DATE")
     private LocalDate  endDate;
 
-    @GeneratedValue(strategy = GenerationType.SEQUENCE , generator = "file_external_key_generator")
-    @SequenceGenerator(name = "file_external_key_generator" , sequenceName = "file_external_key_seq", allocationSize = 1)
     @Column(name = "FILE_NO")
     private String  fileNo;
 
@@ -50,11 +47,20 @@ public class Proejct {
     protected void onCreate() {
         this.regiDate = LocalDateTime.now();
         this.updtDate = LocalDateTime.now();
+        this.fileNo = "Project-" + getNextSequenceValue("file_external_key_seq");
     }
 
     @PreUpdate
     protected void onUpdate() {
         this.updtDate = LocalDateTime.now();
+    }
+
+    @Transient
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    private String getNextSequenceValue(String sequenceName) {
+        return entityManager.createNativeQuery("SELECT " + sequenceName + ".NEXTVAL FROM DUAL").getSingleResult().toString();
     }
 
 }
