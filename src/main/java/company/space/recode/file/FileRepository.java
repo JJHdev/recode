@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface FileRepository extends JpaRepository<File, Long> {
     List<File> findByExternalSeq(String externalSeq , Sort sort);
+    File findFileByseqCode(Long seqCode , Sort sort);
 }

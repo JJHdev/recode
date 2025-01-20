@@ -3,60 +3,98 @@
 <head>
     <title>contact</title>
     <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
-    <script type="text/javascript" th:src="@{/js/project/projects.js}"></script>
+    <script type="text/javascript" th:src="@{/js/project/regiProject.js}"></script>
 </head>
     <body>
-        <form th:action="@{/regiProject.do}" method="post">
-            <section class="py-5">
+        <section class="py-5">
+            <form th:action="@{/regiProject.do}" method="post" enctype="multipart/form-data">
+                <input type="hidden" id="delProjectCode" name="delProjectCode" value="" />
+
                 <div class="container px-5 mb-5">
                     <div class="text-center mb-5">
                         <h1 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline">Projects</span></h1>
                     </div>
+                    <div class="d-flex align-items-center justify-content-end mb-4">
+                        <div class="d-flex">
+                            <button type="button" class="btn btn-success me-2" onclick="onClickButton('addProjectBtn')" style="padding: 0.5rem 1rem; font-size: 0.875rem;">
+                                <div class="d-inline-block bi bi-plus-lg me-2"></div> Add
+                            </button>
+                            <button type="button" class="btn btn-danger" onclick="onClickButton('delProjectBtn')" style="padding: 0.5rem 1rem; font-size: 0.875rem;">
+                                <div class="d-inline-block bi bi-trash me-2"></div> Delete
+                            </button>
+                        </div>
+                    </div>
                     <div class="row gx-5 justify-content-center">
                         <div class="col-lg-11 col-xl-9 col-xxl-8">
+                            <div class="project-container">
+                                <div class="card overflow-hidden shadow rounded-4 border-0 mb-5 project-form" th:if="${not #lists.isEmpty(projectList)}" th:each="project, iterStat : ${projectList}">
+                                    <input type="hidden" th:name="|projectList[${iterStat.index}].seqCode|" th:value="${project.seqCode}" />
+                                    <div class="card-body p-0">
+                                        <div class="d-flex align-items-center">
+                                            <div class="p-5" style="width:100%;">
+                                                <h2 class="fw-bolder" >
+                                                    <input type="text" class="form-control" th:name="|projectList[${iterStat.index}].title|" th:value="${project.title}" placeholder="Enter Title">
+                                                </h2>
+                                                <p><input type="text" class="form-control" th:name="|projectList[${iterStat.index}].content|" th:value="${project.content}" placeholder="Enter content"></p>
+                                            </div>
 
+                                            <div th:if="${not #lists.isEmpty(fileList)}" th:each="file, iterStat : ${fileList}">
+                                                <div th:if="${project.fileNo eq file.externalSeq}">
+                                                    <img class="img-fluid mb-2" th:src="@{/getImages/{fileNo}(fileNo=${file.seqCode})}" alt="Image Preview"  style="max-width: 300px; max-height: 400px;" />
+                                                    <input type="file" class="form-control" th:name="|fileList[${iterStat.index}].seqCode|" />
+                                                </div>
+                                                <div th:if="${project.fileNo ne file.externalSeq}">
+                                                    <img class="img-fluid" src="https://dummyimage.com/300x400/343a40/6c757d" alt="..." />
+                                                    <input type="file" class="form-control" name="fileList" multiple>
+                                                </div>
+                                            </div>
+                                            <div th:unless="${not #lists.isEmpty(fileList)}">
+                                                <img class="img-fluid" src="https://dummyimage.com/300x400/343a40/6c757d" alt="..." />
+                                                <input type="file" class="form-control" name="fileList" multiple>
+                                            </div>
 
-                            <!-- Project Card 1-->
-                            <div class="card overflow-hidden shadow rounded-4 border-0 mb-5">
-                                <div class="card-body p-0">
-                                    <div class="d-flex align-items-center">
-                                        <div class="p-5">
-                                            <h2 class="fw-bolder">Project Name 1</h2>
-                                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius at enim eum illum aperiam placeat esse? Mollitia omnis minima saepe recusandae libero, iste ad asperiores! Explicabo commodi quo itaque! Ipsam!</p>
                                         </div>
-                                        <img class="img-fluid" src="https://dummyimage.com/300x400/343a40/6c757d" alt="..." />
                                     </div>
                                 </div>
-                            </div>
 
-
-                            <!-- Project Card 2-->
-                            <div class="card overflow-hidden shadow rounded-4 border-0">
-                                <div class="card-body p-0">
-                                    <div class="d-flex align-items-center">
-                                        <div class="p-5">
-                                            <h2 class="fw-bolder">Project Name 2</h2>
-                                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius at enim eum illum aperiam placeat esse? Mollitia omnis minima saepe recusandae libero, iste ad asperiores! Explicabo commodi quo itaque! Ipsam!</p>
+                                <div class="card overflow-hidden shadow rounded-4 border-0 mb-5 project-form" th:unless="${not #lists.isEmpty(projectList)}">
+                                    <div class="card-body p-0">
+                                        <div class="d-flex align-items-center">
+                                            <div class="p-5" style="width:100%;">
+                                                <h2 class="fw-bolder" >
+                                                    <input type="text" class="form-control" name="projectList[0].title" value="" placeholder="Enter Title" />
+                                                </h2>
+                                                <p>
+                                                    <textarea class="form-control" rows="12" name="projectList[0].content" placeholder="Enter Sub Content"></textarea>
+                                                </p>
+                                            </div>
+                                            <div>
+                                                <img class="img-fluid" src="https://dummyimage.com/300x400/343a40/6c757d" alt="..." />
+                                                <input type="file" class="form-control" name="fileList" multiple>
+                                            </div>
                                         </div>
-                                        <img class="img-fluid" src="https://dummyimage.com/300x400/343a40/6c757d" alt="..." />
                                     </div>
                                 </div>
+
                             </div>
 
-
+                            <div class="text-center mt-4">
+                                <button type="submit" class="btn btn-primary btn-submit">저장하기</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </section>
-            <!-- Call to action section-->
-            <section class="py-5 bg-gradient-primary-to-secondary text-white">
-                <div class="container px-5 my-5">
-                    <div class="text-center">
-                        <h2 class="display-4 fw-bolder mb-4">Let's build something together</h2>
-                        <a class="btn btn-outline-light btn-lg px-5 py-3 fs-6 fw-bolder" th:href="@{goContact.do}">Contact me</a>
-                    </div>
+            </form>
+        </section>
+        <!-- Call to action section-->
+        <section class="py-5 bg-gradient-primary-to-secondary text-white">
+            <div class="container px-5 my-5">
+                <div class="text-center">
+                    <h2 class="display-4 fw-bolder mb-4">Let's build something together</h2>
+                    <a class="btn btn-outline-light btn-lg px-5 py-3 fs-6 fw-bolder" th:href="@{goContact.do}">Contact me</a>
                 </div>
-            </section>
-        </form>
+            </div>
+        </section>
+
     </body>
 </html>

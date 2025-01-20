@@ -69,6 +69,9 @@ jwt:
   accessExp: 1800000    # 30분을 밀리초로
   refreshExp: 604800000 # 7일을 밀리초로
 
+file:
+  upload-dir: D:/recodeUploads
+
 logging:
   level:
     org.springframework.jdbc.core: DEBUG

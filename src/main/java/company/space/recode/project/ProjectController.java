@@ -11,8 +11,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +45,7 @@ public class ProjectController {
             FileList.add(fileService.findFileByexternalSeq(project.getFileNo()));
         }
 
-        model.addAttribute("FileList", FileList);
+        model.addAttribute("fileList", FileList);
         model.addAttribute("projectList", projectList);
         return "project/viewProject";
     }
@@ -47,19 +53,41 @@ public class ProjectController {
     @GetMapping("/regiProject.do")
     public String regiProjects(Model model, HttpServletRequest request) {
         User userInfo = getUserInfo();
-        List<Project> project = projectService.findProjectByRegiId(userInfo.getUserId());
+        List<Project> projectList = projectService.findProjectByRegiId(userInfo.getUserId());
+        List<File> fileListResult = new ArrayList<>();
 
-        model.addAttribute("project", project);
+        for(Project project : projectList){
+            List<File> fileList = fileService.findFileByexternalSeq(project.getFileNo());
+            for(File file : fileList){
+                fileListResult.add(file);
+            }
+        }
+
+        model.addAttribute("fileList", fileListResult);
+        model.addAttribute("projectList", projectList);
         return "project/regiProject";
     }
 
     @PostMapping("/regiProject.do")
-    public String registerProjects(Model model, HttpServletRequest request) {
+    public String registerProjects(@ModelAttribute ProjectSaveDto projectList) throws IOException {
         User userInfo = getUserInfo();
-        List<Project> project = projectService.findProjectByRegiId(userInfo.getUserId());
+        List<Project> projects = projectList.getProjectList();
+        List<MultipartFile> files = projectList.getFileList();
 
-        model.addAttribute("project", project);
-        return "project/regiProject";
+        // 프로젝트 처리
+        for (int i = 0; i < projects.size(); i++) {
+            Project project = projects.get(i);
+            MultipartFile file = files.get(i);
+
+            project.setRegiId(userInfo.getUserId());
+            // start, end 만 들어오도록 하면 됨
+            Project saveProject = projectService.saveProject(project);
+            if(saveProject != null){
+                fileService.save(file, saveProject.getFileNo(), "Project_Orig" , saveProject.getRegiId());
+            }
+        }
+
+        return "redirect:/regiProject.do";
     }
 
 

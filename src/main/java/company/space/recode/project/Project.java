@@ -47,20 +47,11 @@ public class Project {
     protected void onCreate() {
         this.regiDate = LocalDateTime.now();
         this.updtDate = LocalDateTime.now();
-        this.fileNo = "Project-" + getNextSequenceValue("file_external_key_seq");
     }
 
     @PreUpdate
     protected void onUpdate() {
         this.updtDate = LocalDateTime.now();
-    }
-
-    @Transient
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    private String getNextSequenceValue(String sequenceName) {
-        return entityManager.createNativeQuery("SELECT " + sequenceName + ".NEXTVAL FROM DUAL").getSingleResult().toString();
     }
 
 }
