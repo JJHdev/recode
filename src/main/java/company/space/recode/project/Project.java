@@ -43,6 +43,9 @@ public class Project {
     @Column(name = "UPDT_DATE")
     private LocalDateTime updtDate;
 
+    @Transient
+    private String fileYn;
+
     @PrePersist
     protected void onCreate() {
         this.regiDate = LocalDateTime.now();

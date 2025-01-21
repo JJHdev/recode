@@ -32,7 +32,8 @@ function addProject() {
                     </div>
                     <div>
                         <img class="img-fluid" src="https://dummyimage.com/300x400/343a40/6c757d" alt="..." />
-                        <input type="file" class="form-control" name="fileList" multiple>
+                        <input type="file" class="form-control" name="fileList[${index}].file" multiple>
+                        <input type="hidden" name="fileList[${index}].seqCode">
                     </div>
                 </div>
             </div>

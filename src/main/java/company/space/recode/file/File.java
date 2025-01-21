@@ -2,6 +2,7 @@ package company.space.recode.file;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,6 +19,9 @@ public class File {
 
     @Column(name = "EXTERNAL_SEQ", nullable = false)
     private String externalSeq;
+
+    @Transient
+    private MultipartFile file;
 
     @Column(name = "FILE_ORIG_NAME", nullable = false)
     private String fileOriginName;

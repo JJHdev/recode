@@ -10,4 +10,5 @@ import java.util.List;
 public interface FileRepository extends JpaRepository<File, Long> {
     List<File> findByExternalSeq(String externalSeq , Sort sort);
     File findFileByseqCode(Long seqCode , Sort sort);
+    void deleteById(Long seqCode);
 }

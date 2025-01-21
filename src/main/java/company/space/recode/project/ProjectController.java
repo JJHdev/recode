@@ -58,8 +58,14 @@ public class ProjectController {
 
         for(Project project : projectList){
             List<File> fileList = fileService.findFileByexternalSeq(project.getFileNo());
-            for(File file : fileList){
-                fileListResult.add(file);
+            // Project 객체에 FileYn 값 설정
+            if (fileList != null && !fileList.isEmpty()) {
+                project.setFileYn("Y");
+                for(File file : fileList){
+                    fileListResult.add(file);
+                }
+            } else {
+                project.setFileYn("N");
             }
         }
 
@@ -72,18 +78,22 @@ public class ProjectController {
     public String registerProjects(@ModelAttribute ProjectSaveDto projectList) throws IOException {
         User userInfo = getUserInfo();
         List<Project> projects = projectList.getProjectList();
-        List<MultipartFile> files = projectList.getFileList();
+        List<File> files = projectList.getFileList();
 
         // 프로젝트 처리
         for (int i = 0; i < projects.size(); i++) {
             Project project = projects.get(i);
-            MultipartFile file = files.get(i);
+            MultipartFile file = files.get(i).getFile();
 
             project.setRegiId(userInfo.getUserId());
             // start, end 만 들어오도록 하면 됨
             Project saveProject = projectService.saveProject(project);
             if(saveProject != null){
-                fileService.save(file, saveProject.getFileNo(), "Project_Orig" , saveProject.getRegiId());
+                if(files.get(i).getSeqCode() == null || files.get(i).getSeqCode() == 0){
+                    fileService.save(file, saveProject.getFileNo(), "Project_Orig" , saveProject.getRegiId());
+                }else if (files.get(i).getSeqCode() != null){
+                    fileService.update(files.get(i).getSeqCode(),file, saveProject.getFileNo(), "Project_Orig" , saveProject.getRegiId());
+                }
             }
         }
 
