@@ -1,4 +1,5 @@
-const delProjectCodes = [];
+const delProjectsList = [];
+const delFilesList = [];
 
 
 function onClickButton(buttonId) {
@@ -48,14 +49,25 @@ function delProject() {
     const forms = container.querySelectorAll('.project-form');
     const lastForm = forms[forms.length - 1];
     if (lastForm) {
-        const hiddenInput = lastForm.querySelector('input[type="hidden"][name*=".seqCode"]');
-        if (hiddenInput && hiddenInput.value) {
-            delProjectCodes.push(hiddenInput.value);
+
+        const projectSeqCodeInput = lastForm.querySelector('input[type="hidden"][name^="projectList"][name$=".seqCode"]');
+        if (projectSeqCodeInput && projectSeqCodeInput.value) {
+            delProjectsList.push(projectSeqCodeInput.value);
             const delInput = document.getElementById('delProjectCode');
             if (delInput) {
-                delInput.value = delProjectCodes.join(',');
+                delInput.value = delProjectsList.join(',');
             }
         }
+
+        const fileSeqCodeInput = lastForm.querySelector('input[type="hidden"][name^="fileList"][name$=".seqCode"]');
+        if (fileSeqCodeInput && fileSeqCodeInput.value) {
+            delFilesList.push(fileSeqCodeInput.value);
+            const delInput = document.getElementById('delFileCode');
+            if (delInput) {
+                delInput.value = delFilesList.join(',');
+            }
+        }
+
         lastForm.remove();
     } else {
         console.warn('No experience form to delete.');

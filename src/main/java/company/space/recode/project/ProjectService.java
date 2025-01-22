@@ -1,6 +1,7 @@
 package company.space.recode.project;
 
 import company.space.recode.component.sequence.SequenceGeneratorService;
+import company.space.recode.resume.Education;
 import groovy.util.logging.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -31,6 +32,10 @@ public class ProjectService {
             project.setFileNo(fileNo);
         }
         return projectRepository.save(project);
+    }
+
+    public void deleteProject(Long seqCode) {
+        projectRepository.deleteById(seqCode);
     }
 
 }

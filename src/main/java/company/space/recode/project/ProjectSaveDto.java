@@ -10,4 +10,6 @@ import java.util.List;
 public class ProjectSaveDto {
     private List<Project> projectList;
     private List<File> fileList; // 기존 파일 정보
+    private List<Long> delProjectCode;
+    private List<Long> delFileCode;
 }

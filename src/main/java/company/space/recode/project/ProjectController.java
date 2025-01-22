@@ -79,6 +79,20 @@ public class ProjectController {
         User userInfo = getUserInfo();
         List<Project> projects = projectList.getProjectList();
         List<File> files = projectList.getFileList();
+        List<Long> delProjectCodeList = projectList.getDelProjectCode();
+        List<Long> delFileCodeList = projectList.getDelFileCode();
+
+        for (Long seqCode : delProjectCodeList) {
+            if (seqCode != null) { // null 체크만 수행
+                projectService.deleteProject(seqCode);
+            }
+        }
+
+        for (Long seqCode : delFileCodeList) {
+            if (seqCode != null) { // null 체크만 수행
+                fileService.delete(seqCode);
+            }
+        }
 
         // 프로젝트 처리
         for (int i = 0; i < projects.size(); i++) {
@@ -88,14 +102,15 @@ public class ProjectController {
             project.setRegiId(userInfo.getUserId());
             // start, end 만 들어오도록 하면 됨
             Project saveProject = projectService.saveProject(project);
-            if(saveProject != null){
-                if(files.get(i).getSeqCode() == null || files.get(i).getSeqCode() == 0){
-                    fileService.save(file, saveProject.getFileNo(), "Project_Orig" , saveProject.getRegiId());
-                }else if (files.get(i).getSeqCode() != null){
-                    fileService.update(files.get(i).getSeqCode(),file, saveProject.getFileNo(), "Project_Orig" , saveProject.getRegiId());
+            if (saveProject != null) {
+                if (files.get(i).getSeqCode() == null || files.get(i).getSeqCode() == 0) {
+                    fileService.save(file, saveProject.getFileNo(), "Project_Orig", saveProject.getRegiId());
+                } else if (files.get(i).getSeqCode() != null) {
+                    fileService.update(files.get(i).getSeqCode(), file, saveProject.getFileNo(), "Project_Orig", saveProject.getRegiId());
                 }
             }
         }
+
 
         return "redirect:/regiProject.do";
     }
