@@ -45,8 +45,7 @@
                                 Contact
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="contactDropdown">
-                                <li><a class="dropdown-item" th:href="@{/goRegister.do}">등록하기</a></li>
-                                <li><a class="dropdown-item" th:href="@{/viewContact.do}">조회하기</a></li>
+                                <li><a class="dropdown-item" th:href="@{/goContact.do}">Contact-메일보내기</a></li>
                             </ul>
                         </li>
                         <li class="nav-item" th:if="${userObject.userId != null}"><a class="nav-link" th:href="@{/logout}">Logout</a></li>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div style="margin:120px">
+    <div style="margin-bottom: 10px;text-align: center;">
+        <h1>Contact에서 연락온 메일 입니다.</h1>
+        <br/>
+        <h3 style="text-align: center;"> 관련 내용을 확인해 주세요</h3>
+    </div>
+    <div style="text-align: center;">
+        보낸사람 이름 : <h2 style="color: crimson;" th:text="${sendRegiName}"></h2>
+        보낸사람 메일 주소 : <h2 style="color: crimson;" th:text="${sendRegiEmail}"></h2>
+        보낸사람 핸드폰 번호 : <h2 style="color: crimson;" th:text="${sendRegiPhone}"></h2>
+        관련 내용 : <h2 style="color: crimson;" th:text="${sendRegiNote}"></h2>
+    </div>
+    <br/>
+</div>
+</body>
+</html>

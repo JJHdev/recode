@@ -39,13 +39,22 @@ public class ProjectController {
     public String viewProject(Model model, HttpServletRequest request) {
         User userInfo = getUserInfo();
         List<Project> projectList = projectService.findProjectByRegiId(userInfo.getUserId());
-        List<List<File>> FileList = new ArrayList<>();
+        List<File> fileListResult = new ArrayList<>();
 
         for(Project project : projectList){
-            FileList.add(fileService.findFileByexternalSeq(project.getFileNo()));
+            List<File> fileList = fileService.findFileByexternalSeq(project.getFileNo());
+            // Project 객체에 FileYn 값 설정
+            if (fileList != null && !fileList.isEmpty()) {
+                project.setFileYn("Y");
+                for(File file : fileList){
+                    fileListResult.add(file);
+                }
+            } else {
+                project.setFileYn("N");
+            }
         }
 
-        model.addAttribute("fileList", FileList);
+        model.addAttribute("fileList", fileListResult);
         model.addAttribute("projectList", projectList);
         return "project/viewProject";
     }

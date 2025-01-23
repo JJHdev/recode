@@ -24,6 +24,11 @@ function addProject() {
             <div class="card-body p-0">
                 <div class="d-flex align-items-center">
                     <div class="p-5" style="width:100%;">
+                        <div class="text-primary fw-bolder mb-3">
+                            <input type="date" class="form-control d-inline w-auto" name="projectList[0].startDate" value="" />
+                            ~
+                            <input type="date" class="form-control d-inline w-auto" name="projectList[0].endDate" value="" />
+                        </div>
                         <h2 class="fw-bolder" >
                             <input type="text" class="form-control" name="projectList[${index}].title" value="" placeholder="Enter Title" />
                         </h2>
@@ -32,7 +37,7 @@ function addProject() {
                         </p>
                     </div>
                     <div>
-                        <img class="img-fluid" src="https://dummyimage.com/300x400/343a40/6c757d" alt="..." />
+                        <img class="img-fluid" src="https://dummyimage.com/300x400/343a40/6c757d" style="width: 400px; max-height: 400px;"  alt="..." />
                         <input type="file" class="form-control" name="fileList[${index}].file" multiple>
                         <input type="hidden" name="fileList[${index}].seqCode">
                     </div>

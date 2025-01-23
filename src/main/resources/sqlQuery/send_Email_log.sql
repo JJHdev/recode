@@ -1,0 +1,12 @@
+CREATE TABLE SEND_EMAIL_LOG (
+    SEQ_CODE       NUMBER(10)             PRIMARY KEY,        -- 파일 ID (고유키)
+    SEND_REGI_NAME VARCHAR2(50),
+    SEND_REGI_EMAIL  VARCHAR2(200)  NOT NULL,
+    SEND_REGI_PHONE VARCHAR2(20),
+    SEND_REGI_NOTE CLOB,
+    SEND_STATUS CHAR(1),
+    REGI_ID       VARCHAR2(50)            NOT NULL,           -- 등록자
+    REGI_DATE     DATE                    DEFAULT SYSDATE    -- 등록일
+);
+
+CREATE SEQUENCE send_email_log_seq START WITH 1 INCREMENT BY 1;

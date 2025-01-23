@@ -2,6 +2,8 @@ package company.space.recode.email;
 
 import company.space.recode.component.Utils.ServiceResult;
 import company.space.recode.component.exception.EmailCheckException;
+import company.space.recode.contact.ContactEmail;
+import company.space.recode.contact.ContactEmailSaveForm;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
@@ -27,11 +29,13 @@ public class EmailService {
 
     private final JavaMailSender javaMailSender;
     private final EmailRepository emailRepository;
+    private final ContactEmailRepository contactEmailRepository;
 
     @Autowired
-    public EmailService(JavaMailSender javaMailSender, EmailRepository emailRepository) {
+    public EmailService(JavaMailSender javaMailSender, EmailRepository emailRepository, ContactEmailRepository contactEmailRepository) {
         this.javaMailSender = javaMailSender;
         this.emailRepository = emailRepository;
+        this.contactEmailRepository = contactEmailRepository;
     }
 
     // 이메일 발송 메서드
@@ -121,6 +125,61 @@ public class EmailService {
         } catch (Exception e) {
             return ServiceResult.failure("An unexpected error occurred: " + e.getMessage());
         }
+    }
+
+
+
+    // 이메일 발송 메서드
+    public void sendContactEmail(ContactEmailSaveForm contactEmailSaveForm) throws MessagingException {
+        ContactEmail contactEmail = new ContactEmail();
+
+        contactEmail.setSendRegiName(contactEmailSaveForm.getSendRegiName());
+        contactEmail.setSendRegiNote(contactEmailSaveForm.getSendRegiNote());
+        contactEmail.setSendRegiPhone(contactEmailSaveForm.getSendRegiPhone());
+        contactEmail.setSendRegiEmail(contactEmailSaveForm.getSendRegiEmail());
+        contactEmail.setSendStatus("1");
+        contactEmail.setRegiId(contactEmailSaveForm.getRegiId());
+
+        contactEmailRepository.save(contactEmail);
+
+        // 이메일 폼 생성
+        MimeMessage emailForm = createContactEmailForm(contactEmail);
+
+        // 이메일 발송
+        javaMailSender.send(emailForm);
+    }
+
+    private MimeMessage createContactEmailForm(ContactEmail contactEmail) throws MessagingException {
+        // 이메일 폼 작성 로직
+        MimeMessage message = javaMailSender.createMimeMessage();
+
+        message.setSubject("안녕하세요. Contact관련 문의 내용입니다.");
+        message.setFrom(senderEmail);
+        message.setText(setContactEmailContext(contactEmail), "utf-8", "html");
+        message.setRecipients(MimeMessage.RecipientType.TO, "goodjob321@hanmail.net");
+
+        return message;
+    }
+
+    // 이메일 내용 초기화
+    private String setContactEmailContext(ContactEmail contactEmail) {
+        Context context = new Context();
+        TemplateEngine templateEngine = new TemplateEngine();
+        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+
+        context.setVariable("sendRegiName", contactEmail.getSendRegiEmail());
+        context.setVariable("sendRegiEmail", contactEmail.getSendRegiName());
+        context.setVariable("sendRegiPhone", contactEmail.getSendRegiNote());
+        context.setVariable("sendRegiNote", contactEmail.getSendRegiPhone());
+
+        templateResolver.setPrefix("templates/mail/");
+        templateResolver.setSuffix(".html");
+        templateResolver.setTemplateMode(TemplateMode.HTML);
+        templateResolver.setCacheable(false);
+
+        templateEngine.setTemplateResolver(templateResolver);
+
+        return templateEngine.process("contactMail", context);
     }
 
 }

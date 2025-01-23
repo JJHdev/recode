@@ -14,26 +14,34 @@
                 <div class="row gx-5 justify-content-center">
                     <div class="col-lg-11 col-xl-9 col-xxl-8">
                         <!-- Project Card 1-->
-                        <div class="card overflow-hidden shadow rounded-4 border-0 mb-5">
+                        <div class="card overflow-hidden shadow rounded-4 border-0 mb-5 project-form" th:if="${not #lists.isEmpty(projectList)}" th:each="project, iterStat : ${projectList}">
                             <div class="card-body p-0">
                                 <div class="d-flex align-items-center">
-                                    <div class="p-5">
-                                        <h2 class="fw-bolder">Project Name 1</h2>
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius at enim eum illum aperiam placeat esse? Mollitia omnis minima saepe recusandae libero, iste ad asperiores! Explicabo commodi quo itaque! Ipsam!</p>
+
+                                    <div class="p-3" style="max-width: 60%; min-width: 60%;">
+                                        <div class="text-primary fw-bolder mb-3">
+                                            <span class="form-control d-inline w-auto" th:text="${project.startDate} ?: '시작 날짜 없음'"></span>
+                                            ~
+                                            <span class="form-control d-inline w-auto" th:text="${project.endDate} ?: '종료 날짜 없음'"></span>
+                                        </div>
+
+                                        <div class="p-3">
+                                            <h2 class="fw-bolder" th:text="${project.title} ?: '제목'"></h2>
+                                            <p th:text="${project.content} ?: '내용'"></p>
+                                        </div>
                                     </div>
-                                    <img class="img-fluid" src="https://dummyimage.com/300x400/343a40/6c757d" alt="..." />
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Project Card 2-->
-                        <div class="card overflow-hidden shadow rounded-4 border-0">
-                            <div class="card-body p-0">
-                                <div class="d-flex align-items-center">
-                                    <div class="p-5">
-                                        <h2 class="fw-bolder">Project Name 2</h2>
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius at enim eum illum aperiam placeat esse? Mollitia omnis minima saepe recusandae libero, iste ad asperiores! Explicabo commodi quo itaque! Ipsam!</p>
+
+                                    <div th:if="${project.fileYn eq 'Y'}">
+                                        <div th:if="${not #lists.isEmpty(fileList)}" th:each="file : ${fileList}">
+                                            <div th:if="${project.fileNo eq file.externalSeq}">
+                                                <img class="img-fluid mb-2" th:src="@{/getImages/{fileNo}(fileNo=${file.seqCode})}" alt="Image Preview"  style="width: 400px; max-height: 400px;" />
+                                            </div>
+                                        </div>
                                     </div>
-                                    <img class="img-fluid" src="https://dummyimage.com/300x400/343a40/6c757d" alt="..." />
+                                    <div th:if="${project.fileYn eq 'N' or #lists.isEmpty(fileList)}">
+                                        <img class="img-fluid" src="https://dummyimage.com/300x400/343a40/6c757d" alt="..." />
+                                    </div>
+
                                 </div>
                             </div>
                         </div>

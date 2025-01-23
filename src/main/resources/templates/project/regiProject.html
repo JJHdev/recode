@@ -34,24 +34,32 @@
 
                                     <div class="card-body p-0">
                                         <div class="d-flex align-items-center">
+
                                             <div class="p-5" style="width:100%;">
+                                                <div class="text-primary fw-bolder mb-3">
+                                                    <input type="date" class="form-control d-inline w-auto" th:name="|projectList[${iterStat.index}].startDate|" th:value="${project.startDate}" />
+                                                    ~
+                                                    <input type="date" class="form-control d-inline w-auto" th:name="|projectList[${iterStat.index}].endDate|" th:value="${project.endDate}" />
+                                                </div>
                                                 <h2 class="fw-bolder" >
                                                     <input type="text" class="form-control" th:name="|projectList[${iterStat.index}].title|" th:value="${project.title}" placeholder="Enter Title">
                                                 </h2>
-                                                <p><input type="text" class="form-control" th:name="|projectList[${iterStat.index}].content|" th:value="${project.content}" placeholder="Enter content"></p>
+                                                <p>
+                                                    <textarea class="form-control" rows="12" th:name="|projectList[${iterStat.index}].content|" th:text="${project.content}" placeholder="Enter Sub Content"></textarea>
+                                                </p>
                                             </div>
 
                                             <div th:if="${project.fileYn eq 'Y'}">
                                                 <div th:if="${not #lists.isEmpty(fileList)}" th:each="file : ${fileList}">
                                                     <div th:if="${project.fileNo eq file.externalSeq}">
-                                                        <img class="img-fluid mb-2" th:src="@{/getImages/{fileNo}(fileNo=${file.seqCode})}" alt="Image Preview"  style="max-width: 300px; max-height: 400px;" />
+                                                        <img class="img-fluid mb-2" th:src="@{/getImages/{fileNo}(fileNo=${file.seqCode})}" alt="Image Preview"  style="width: 400px; max-height: 400px;" />
                                                         <input type="file" class="form-control" th:name="|fileList[${iterStat.index}].file|" multiple />
                                                         <input type="hidden" th:name="|fileList[${iterStat.index}].seqCode|" th:value="${file.seqCode}" />
                                                     </div>
                                                 </div>
                                             </div>
                                             <div th:if="${project.fileYn eq 'N' or #lists.isEmpty(fileList)}">
-                                                <img class="img-fluid" src="https://dummyimage.com/300x400/343a40/6c757d" alt="..." />
+                                                <img class="img-fluid" src="https://dummyimage.com/300x400/343a40/6c757d" style="width: 400px; max-height: 400px;"  alt="..." />
                                                 <input type="file" class="form-control" th:name="|fileList[${iterStat.index}].file|" multiple>
                                             </div>
 
@@ -63,7 +71,12 @@
                                     <div class="card-body p-0">
                                         <div class="d-flex align-items-center">
                                             <div class="p-5" style="width:100%;">
-                                                <h2 class="fw-bolder" >
+                                                <div class="text-primary fw-bolder mb-3">
+                                                    <input type="date" class="form-control d-inline w-auto" name="projectList[0].startDate" value="" />
+                                                    ~
+                                                    <input type="date" class="form-control d-inline w-auto" name="projectList[0].endDate" value="" />
+                                                </div>
+                                                <h2 class="fw-bolder">
                                                     <input type="text" class="form-control" name="projectList[0].title" value="" placeholder="Enter Title" />
                                                 </h2>
                                                 <p>
@@ -72,7 +85,7 @@
                                             </div>
                                             <div>
                                                 <img class="img-fluid" src="https://dummyimage.com/300x400/343a40/6c757d" alt="..." />
-                                                <input type="file" class="form-control" name=fileList[0].file multiple>
+                                                <input type="file" class="form-control" name="fileList[0].file" multiple>
                                             </div>
                                         </div>
                                     </div>
