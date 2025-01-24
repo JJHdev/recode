@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns='http://www.w3.org/1999/html'>
+<head>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+    <title>브이월드 WMTS을 활용한 wms 표출</title>
+    <script src='https://cdn.jsdelivr.net/npm/ol@v7.1.0/dist/ol.js'></script>
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/ol@v7.1.0/ol.css'>
+    <script src='https://code.jquery.com/jquery-2.2.3.min.js'></script>
+</head>
+
+<body>
+<div id='map-content' style='width: 900px; height: 600px;'></div>
+<div>
+    <select id='wmslist' style='width:900px; height:35px; font-size:20px; text-align:center'>
+        <option data-id=''>없음</option>
+        <option data-id='lt_l_moctlink'>교통링크</option>
+        <option data-id='lp_pa_cbnd_bubun'>지적도</option>
+        <option data-id='lt_c_aisprhc'>비행금지구역</option>
+        <option data-id='lt_c_aisuac'>(UA)초경량비행장치공역</option>
+        <option data-id='lt_c_aisctrc'>관제권</option>
+        <option data-id='lt_p_utiscctv'>교통CCTV</option>
+        <option data-id='lt_c_kfdrssigugrade'>산불위험예측지도</option>
+    </select>
+</div>
+<div style='width:900px; text-align:center;'>
+    <label>
+        <input type='checkbox' data-id='lt_l_moctlink' value='교통링크'>교통링크
+    </label>
+    <label>
+        <input type='checkbox' data-id='lp_pa_cbnd_bubun' value='연속지적도'>연속지적도
+    </label>
+    <label>
+        <input type='checkbox' data-id='lt_c_aisprhc' value='비행금지구역'>비행금지구역
+    </label>
+    <label>
+        <input type='checkbox' data-id='lt_c_aisuac' value='(UA)초경량비행장치공역'>(UA)초경량비행장치공역
+    </label>
+    <label>
+        <input type='checkbox' data-id='lt_c_aisctrc' value='관제권'>관제권
+    </label>
+    <label>
+        <input type='checkbox' data-id='lt_p_utiscctv' value='교통CCTV'>교통CCTV
+    </label>
+    <label>
+        <input type='checkbox' data-id='lt_c_kfdrssigugrade' value='산불위험예측지도'>산불위험예측지도
+    </label>
+</div>
+
+<script type='text/javascript'>
+
+    //브이월드 인증키
+    apikey = 'CEB52025-E065-364C-9DBA-44880E3B02B8';//해당 인증키를 실제 개발 및 운영 사용하지마세요.
+    //좌표계
+    geoepsg = 'EPSG:3857'
+
+    //브이월드 WMTS(BASE) 지정
+    let Base = new ol.layer.Tile({
+        name : 'Base',
+        source: new ol.source.XYZ({
+            url: 'http://api.vworld.kr/req/wmts/1.0.0/'+apikey+'/Base/{z}/{y}/{x}.png'  // WMTS API 사용
+        })
+    });
+
+    //map-content에 ol지도 지정
+    let Map = new ol.Map({
+        target:'map-content',
+        layers: [Base],
+        view: new ol.View({
+            center: new ol.proj.transform([127.100616,37.402142], 'EPSG:4326', geoepsg),
+            zoom: 11,
+        })
+    })
+
+
+    //레이어 표출단계
+
+    let WMS_name, WMS_id;
+
+    //checkbox가 클릭될 경우
+    $(document).on('click', '[type=checkbox]', function(){
+
+        WMS_name = $(this).val();
+        WMS_id = $(this).attr('data-id');
+
+        if (!$(this).is(':checked')){
+            Map.getLayers().forEach(function(layer){
+                if(layer.get('name') == WMS_name){
+                    Map.removeLayer(layer);
+                }
+            })
+        }else{
+            let wms_tile = new ol.layer.Tile({
+                name : WMS_name,
+                source : new ol.source.TileWMS({
+                    url : 'https://api.vworld.kr/req/wms?',
+                    params : {
+                        LAYERS : WMS_id,
+                        STYLES : WMS_id,
+                        CRS : geoepsg,
+                        apikey : apikey,
+                        title : WMS_name,
+                        FORMAT : 'image/png',
+                    }
+                })
+            });
+            Map.addLayer(wms_tile);
+        }
+    })
+
+    //select가 변경될 경우
+    $('#wmslist').on('change', function(){
+        Map.getLayers().forEach(function(layer){
+            if(layer.get('name') == 'WMS_LAYER'){
+                Map.removeLayer(layer);//기존WMS제거
+            }
+        })
+        WMS_name = $(this).val();
+        WMS_id = $(this).find('option:selected').data('id');
+
+        if (WMS_id){
+            let wms_tile = new ol.layer.Tile({
+                name : 'WMS_LAYER',
+                source : new ol.source.TileWMS({
+                    url : 'https://api.vworld.kr/req/wms?',
+                    params : {
+                        LAYERS : WMS_id,
+                        STYLES : WMS_id,
+                        CRS : geoepsg,
+                        apikey : apikey,
+                        title : WMS_name,
+                        FORMAT : 'image/png',
+                    }
+                })
+            });
+            Map.addLayer(wms_tile);
+        }
+    })
+
+</script>
+</body>
+</html>
